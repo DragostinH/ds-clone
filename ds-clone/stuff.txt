@@ -1,0 +1,36 @@
+1. WebSocket Implementation:
+On the Backend: Since you want to avoid abstract libraries, I would suggest using the native ws library for WebSockets in Node.js. It's lightweight and won't abstract too much, giving you more control and understanding of WebSocket connections, events like onmessage, onopen, and onclose.
+You’ll need to handle message broadcasting between clients, so consider setting up logic for rooms/channels, direct messages, and user presence status.
+On the Frontend: Next.js has server-side rendering (SSR), but WebSockets are client-side, so you will need to manage the connection using the WebSocket API directly or via a basic library like Socket.io (if you want to introduce some abstraction but still maintain control).
+
+2. Authentication:
+Implementing JWT (JSON Web Tokens) is a good way to authenticate users and keep the WebSocket connections secure. You can create tokens on successful login and use them for WebSocket connections to identify users.
+Consider how users will log in and manage their sessions. With Next.js, you can use a combination of NextAuth.js or handle session management manually with cookies and tokens.
+
+3. Scaling with Rooms/Channels:
+Think about how you’ll structure real-time messaging channels. When using WebSockets, channels are usually rooms that group users.
+On the backend, you can assign users to rooms, handle private vs. public rooms, and ensure only authorized users have access to certain rooms.
+
+4. Handling State and Concurrency:
+With real-time systems, handling concurrent messages and syncing state across multiple users is a common challenge. Implementing logic for optimistic updates (instant UI updates with rollback if the backend fails) will improve the user experience.
+Ensure you’re accounting for message history and data persistence. For example, chat history in MongoDB could be queried for new users when they join a room.
+
+5. Message Persistence:
+Use MongoDB to persist chat messages, and make sure you design your schema efficiently. You could store messages in a collection where each document represents a conversation thread with fields for sender, message content, and timestamp.
+
+6. Real-Time Presence and Notifications:
+Implement user presence features (e.g., online, offline, idle) using WebSockets. This can be done by broadcasting presence events whenever a user connects or disconnects.
+Additionally, you can use WebSockets to notify users about new messages or updates, similar to how Discord has notification dots or badges.
+
+7. Rate Limiting and Security:
+Consider adding rate limiting on the WebSocket connections to prevent spamming and abusive usage.
+Handle potential security risks, like DoS attacks on your WebSocket server, by using throttling mechanisms or timeout disconnections for idle connections.
+
+8. Deployment & Hosting:
+If you're considering hosting your project, services like Heroku or Vercel will handle your frontend and backend. You may need to look into WebSocket compatibility (e.g., sticky sessions for Heroku).
+If you expect growth, you’ll want to scale the WebSocket servers using load balancers like HAProxy or NGINX. Ensure your WebSocket connections are distributed properly across servers.
+
+9. DevOps and Monitoring:
+Add logging for WebSocket events (e.g., onconnect, ondisconnect, onmessage) to track activity in real-time.
+Use monitoring tools like PM2 for managing and monitoring the backend, ensuring you capture memory usage and CPU loads as you scale your WebSocket connections.
+By incorporating these aspects, you will build a full-featured WebSocket-based real-time app and learn much more about WebSocket behavior, state management, and scaling challenges.
