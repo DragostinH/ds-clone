@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    emailVerified: {
+        type: Date,
+    },
 });
 
 module.exports = mongoose.model('User', userSchema);

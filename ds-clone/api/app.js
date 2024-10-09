@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mongoDB = require('./mongodb');
 const cors = require('cors');
 const createError = require('http-errors');
@@ -7,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
 const app = express();
 
@@ -33,5 +35,7 @@ app.use(express.json());
 app.use('/api', indexRouter);
 
 app.use('/api', usersRouter);
+
+app.use('/api', authRouter);
 
 module.exports = app;

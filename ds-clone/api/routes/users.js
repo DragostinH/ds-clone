@@ -31,7 +31,7 @@ router.get('/users', async (req, res) => {
  * @access  Public
  */
 
-router.post('/register', async (req, res) => {
+router.post('/create', async (req, res) => {
     try {
         const { name, email, password } = req.body;
         const user = new User({
