@@ -9,7 +9,9 @@ import client from "@/app/lib/db"
 export async function GET(req: NextRequest) {
     await client.connect();
     const database = client.db('discord_clonse');
+    const data = await database.collection('users').find({}).toArray()
+
     console.log(database);
-    
-    return NextResponse.json({ message: "Hello World" });
+
+    return NextResponse.json({ message: "Hello World", data: data });
 }
