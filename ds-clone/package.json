@@ -12,7 +12,9 @@
     "serverstart": "DEBUG=express-locallibrary-tutorial:* npm nodestart"
   },
   "dependencies": {
+    "@auth/mongodb-adapter": "^3.7.0",
     "@tailwindcss/forms": "^0.5.9",
+    "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
     "cookie-parser": "^1.4.6",
@@ -30,9 +32,11 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^5.3.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
