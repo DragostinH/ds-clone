@@ -1,14 +1,31 @@
 import { NextResponse } from "next/server";
-import client from "@/app/lib/db";
+import client from "@/app/libs/prismadb";
+import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
-    await client.connect();
-    const database = client.db('discord_clone');
-    const body = await req.json();
-    database.collection('users').insertOne(body);
+    try {
+        const body = await req.json();
+        const { name, email, password } = body;
 
-    console.log(body);
+        if (!name || !email || !password) return new NextResponse("Invalid Credentials", { status: 400 });
 
-    return NextResponse.json({ message: "Hello World", data: body });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await client.user.create({
+            data: {
+                name,
+                email,
+                password: hashedPassword,
+            },
+        });
 
+        return NextResponse.json({
+            message: "User created", user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            }
+        });
+    } catch (error: any) {
+        return NextResponse.json({ status: 500, error: error, message: "Internal Server Error. User not created" });
+    }
 }

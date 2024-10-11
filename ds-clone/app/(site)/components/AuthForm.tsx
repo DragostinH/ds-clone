@@ -31,10 +31,34 @@ const AuthForm = () => {
     },
   });
 
+  const handleRegister = async (data: FieldValues) => {
+    try {
+      console.log("data", data);
+      console.log("registering");
+    } catch (error) {}
+  };
+
+  const handleLogin = async (data: FieldValues) => {
+    try {
+      console.log("data", data);
+      console.log("logging in");
+    } catch (error) {}
+  };
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setLoading(true);
-    console.log(data);
-    // setLoading(false);
+    try {
+      switch (variant) {
+        case "LOGIN":
+          await handleLogin(data);
+          break;
+        case "REGISTER":
+          await handleRegister(data);
+          break;
+        default:
+      }
+      setLoading(false);
+    } catch (error) {}
   };
   return (
     <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">

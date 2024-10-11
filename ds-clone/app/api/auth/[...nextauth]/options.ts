@@ -1,18 +1,24 @@
 import type { NextAuthOptions } from "next-auth";
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import client from "@/app/lib/db";
+import GoogleProvider from "next-auth/providers/google";
+import client from "@/app/libs/prismadb";
 import User from "@/api/models/User";
 const bcrypt = require('bcryptjs');
 
 
 export const options: NextAuthOptions = {
-  adapter: MongoDBAdapter(client),
+  adapter: PrismaAdapter(client),
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
+    }),
+
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID as string,
+      clientSecret: process.env.GOOGLE_SECRET as string,
     }),
 
     CredentialsProvider({
@@ -25,25 +31,24 @@ export const options: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials || !credentials.email || !credentials.password) throw new Error("Missing credentials");
 
-        const user = await User.findOne({
-          email: credentials.email,
-          password: credentials.password,
-        })
+        const user = await prisma?.user.findUnique({
+          where: { email: credentials.email },
+        });
 
         if (!user || !user?.password) throw new Error("Invalid credentials");
 
-        const { password, _id, ...rest } = user.toObject();
+        const { password, ...rest } = user;
         const isMatch = await bcrypt.compare(credentials?.password, password);
 
         if (!isMatch) throw new Error("Invalid credentials");
 
-        return { ...rest, id: _id.toString() };
+        return { ...rest };
 
       },
     }),
   ],
   debug: process.env.NODE_ENV === "development",
-  session:{
+  session: {
     strategy: "jwt",
   },
 

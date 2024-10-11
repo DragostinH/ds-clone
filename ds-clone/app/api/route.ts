@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { NextAuthOptions } from "next-auth";
 import { MongoClient } from "mongodb";
-import client from "@/app/lib/db"
+import client from "@/app/libs/db"
 
 export async function GET(req: NextRequest) {
     await client.connect();

@@ -27,4 +27,3 @@ if (process.env.NODE_ENV === "development") {
     client = new MongoClient(uri, options);
 }
 
-export default client;
