@@ -4,14 +4,11 @@ import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { NextAuthOptions } from "next-auth";
 import { MongoClient } from "mongodb";
-import client from "@/app/libs/db"
+import client from "@/app/libs/prismadb";
 
 export async function GET(req: NextRequest) {
-    await client.connect();
-    const database = client.db('discord_clonse');
-    const data = await database.collection('users').find({}).toArray()
+  await client.$connect();
+  const users = await client.user.findMany();
 
-    console.log(database);
-
-    return NextResponse.json({ message: "Hello World", data: data });
+  return NextResponse.json({ message: "Hello World", data: users });
 }
