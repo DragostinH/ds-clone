@@ -2,19 +2,28 @@
 
 import Button from "@/app/components/Button";
 import Input from "@/app/components/inputs/Input";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton";
 import { FaGoogle, FaGithub, FaReddit } from "react-icons/fa";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Variant = "LOGIN" | "REGISTER";
 
 const iconProviders = [FaGoogle, FaGithub, FaReddit];
 
 const AuthForm = () => {
+  const session = useSession();
+  const router = useRouter();
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      router.push("/messages");
+    }
+  }, [session.status, router]);
   const handleVariant = useCallback(() => {
     setVariant((prev) => (prev === "LOGIN" ? "REGISTER" : "LOGIN"));
   }, [variant]);
@@ -40,9 +49,14 @@ const AuthForm = () => {
 
   const handleLogin = async (data: FieldValues) => {
     try {
-      console.log("data", data);
-      console.log("logging in");
-    } catch (error) {}
+      await signIn("credentials", {
+        callbackUrl: "/messages",
+        email: data.email,
+        password: data.password,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
