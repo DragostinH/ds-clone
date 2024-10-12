@@ -1,10 +1,10 @@
+import Input from "@/app/components/inputs/Input";
+import AuthForm from "./components/AuthForm";
 
 export default async function Home() {
-    return (
-      <div>
-        <h1>Home</h1>
-        <p>Welcome to the home page</p>
-      </div>
-    );
-  }
-  
+  return (
+    <div>
+      <AuthForm />
+    </div>
+  );
+}
