@@ -51,8 +51,7 @@ const AuthForm = () => {
     try {
       await signIn("credentials", {
         callbackUrl: "/messages",
-        email: data.email,
-        password: data.password,
+        ...data,
       });
     } catch (error) {
       console.error(error);
