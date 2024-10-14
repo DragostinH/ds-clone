@@ -38,7 +38,7 @@ const Button: React.FC<ButtonProps> = ({
         "hover:shadow-md",
         "disabled:opacity-50 cursor-default",
         {
-          "bg-blue-500 hover:bg-blue-700": !secondary && !danger,
+          "bg-primary-500 hover:bg-primary-700": !secondary && !danger,
           "bg-red-500 hover:bg-red-700": danger,
           "bg-gray-500 hover:bg-gray-700": secondary,
           "w-full": fullWidth,

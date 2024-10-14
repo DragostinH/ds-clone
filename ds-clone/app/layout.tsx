@@ -1,18 +1,8 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { AuthContext } from "./context/AuthContext";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { Toaster } from "react-hot-toast";
+import ToasterContext from "./context/ToasterContext";
 
 export const metadata: Metadata = {
   title: "Discord Clone",
@@ -26,10 +16,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthContext>{children}</AuthContext>
+      <body className="">
+        <AuthContext>
+          <ToasterContext />
+          {children}
+        </AuthContext>
+        <footer className="absolute bottom-0 w-full text-center text-gray-500">
+          {" "}
+          © 2024 Discord Clone. Made with ❤️ by{" "}
+          <a target="_blank" href="https://github.com/DragostinH/ds-clone">
+            @DragostinH
+          </a>
+        </footer>
       </body>
     </html>
   );

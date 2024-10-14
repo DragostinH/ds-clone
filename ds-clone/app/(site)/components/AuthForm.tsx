@@ -8,6 +8,8 @@ import AuthSocialButton from "./AuthSocialButton";
 import { FaGoogle, FaGithub, FaReddit } from "react-icons/fa";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -20,7 +22,12 @@ const AuthForm = () => {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log("checking auth");
+    console.log(session.status);
+
     if (session.status === "authenticated") {
+      console.log("checking auth and its auth");
+
       router.push("/messages");
     }
   }, [session.status, router]);
@@ -42,19 +49,46 @@ const AuthForm = () => {
 
   const handleRegister = async (data: FieldValues) => {
     try {
-      console.log("data", data);
-      console.log("registering");
+      axios.post("/api/register", data).then((response) => {
+        if (response.status === 200) {
+          toast.success("User registered successfully");
+          signIn("credentials", {
+            ...data,
+            redirect: false,
+          });
+          router.push("/messages");
+        }
+
+        if (response.status === 400) {
+          toast.error("Failed to register");
+        }
+      });
     } catch (error) {}
   };
 
   const handleLogin = async (data: FieldValues) => {
     try {
+      if (!data.email || !data.password) {
+        toast.error("Please fill in all fields");
+        return;
+      }
       await signIn("credentials", {
-        callbackUrl: "/messages",
         ...data,
+        redirect: false,
+      }).then((callback) => {
+        if (callback?.error) {
+          toast.error(callback.error);
+          return;
+        }
+
+        if (callback?.ok) {
+          toast.success("Logged in successfully");
+          router.push("/messages");
+        }
       });
     } catch (error) {
       console.error(error);
+      toast.error("Failed to login");
     }
   };
 
@@ -70,11 +104,12 @@ const AuthForm = () => {
           break;
         default:
       }
+
       setLoading(false);
     } catch (error) {}
   };
   return (
-    <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
+    <div className="bg-gray-200 shadow-md px-4 py-8 sm:rounded-lg sm:px-10">
       <form
         className="flex flex-col space-y-4"
         onSubmit={handleSubmit(onSubmit)}
@@ -135,7 +170,7 @@ const AuthForm = () => {
         text-sm
           "
           >
-            <span className="bg-white px-2 text-gray-500">
+            <span className="bg-gray-200 px-2 text-gray-900">
               Or continue with
             </span>
           </div>
