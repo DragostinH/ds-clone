@@ -2,25 +2,27 @@
 import React from "react";
 import { BsChatDots } from "react-icons/bs";
 import clsx from "clsx";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
-interface MessagesRouteLinkProps {
-  active: boolean;
-}
-const MessagesRouteLink: React.FC<MessagesRouteLinkProps> = ({ active }) => {
+const MessagesRouteLink = () => {
   const Icon = BsChatDots;
+  const router = useRouter();
+  const pathName = usePathname();
+  const active = pathName === "/channels/messages";
   return (
-    <div
+    <Link
+      href="/channels/messages"
       className={clsx(
         "border-[1px] h-12 w-12 items-center flex justify-center rounded-full",
         "cursor-pointer transition-all duration-600 ease-in-out",
-        "hover:transform hover:scale-110 hover:rotate-[-24deg] hover:bg-opacity-50",
+        "hover:transform hover:scale-90 hover:rotate-[-24deg] hover:bg-opacity-50",
         "hover:shadow-lg hover:border-transparent",
         {
           "bg-primary-500": active,
           "border-primary-500": !active,
         }
-      )}
-    >
+      )}>
       <div>
         <Icon
           className={clsx({
@@ -29,7 +31,7 @@ const MessagesRouteLink: React.FC<MessagesRouteLinkProps> = ({ active }) => {
           })}
         />
       </div>
-    </div>
+    </Link>
   );
 };
 

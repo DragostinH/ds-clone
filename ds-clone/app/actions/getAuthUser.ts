@@ -12,7 +12,6 @@ const getAuthUser = async () => {
     if (!currentUser) return null;
     return currentUser;
   } catch (error) {
-    console.error(error);
     return null;
   }
 };

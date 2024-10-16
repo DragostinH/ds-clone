@@ -17,12 +17,10 @@ const Messages = () => {
     });
   };
 
-  
   return (
-    <div className="hidden lg:block lg:pl-80 h-full">
+    <div className="h-full">
+      asd
       <EmptyState />
-
-      <div className="">asdasd</div>
     </div>
   );
 };

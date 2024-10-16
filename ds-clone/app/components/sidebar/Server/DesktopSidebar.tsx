@@ -5,14 +5,13 @@ import DesktopSidebarItem from "./DesktopSidebarItem";
 import { User } from "@prisma/client";
 import AuthUserAvatar from "./AuthUserAvatar";
 import MessagesRouteLink from "./MessagesRouteLink";
+import LineSeparator from "./LineSeparator";
 
 interface DesktopSidebarProps {
   currentUser?: User;
 }
 
 const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
-  console.log(currentUser);
-
   const sidebarRoutes = useSidebarRoutes();
   return (
     <div
@@ -31,27 +30,14 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
       lg:flex
       lg:flex-col
       justify-between
-      "
-    >
+      ">
       <nav
-        className="
-        flex flex-col items-center
-        "
-      >
-        <MessagesRouteLink
-        
-        active={sidebarRoutes[0].active}
-        />
+        className="flex flex-col items-center
+        ">
+        <span className="text-xs">messages</span>
+        <MessagesRouteLink />
         {/* separator */}
-
-        <div
-          className="
-          h-[1px]
-          w-12
-          bg-gray-200
-          my-2
-          "
-        ></div>
+        <LineSeparator />
         <ul
           role="list"
           className="
@@ -60,8 +46,8 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
           space-y-1
           gap-2
           mt-2
-          "
-        >
+          ">
+          <span className="text-xs">Channels</span>
           {sidebarRoutes.map((route) => {
             return (
               <DesktopSidebarItem
@@ -78,12 +64,14 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
 
       <nav
         className="
-        flex
-        flex-col
-        items-center
-        "
-      >
-        <AuthUserAvatar name={currentUser?.name!} image={currentUser?.image!} />
+				flex
+       	 		flex-col
+        		items-center
+        		">
+        {/* <AuthUserAvatar
+          name={currentUser?.name!}
+          image={currentUser?.image!}
+        /> */}
       </nav>
     </div>
   );

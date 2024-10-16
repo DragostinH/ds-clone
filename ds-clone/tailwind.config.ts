@@ -1,14 +1,16 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./pages/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}", "./app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     // create a custom color palette from ranges 50-900 and make it light blue
     extend: {
+      flexBasis: {
+        "1/3": "33.333333%",
+        "2/3": "66.666667%",
+        "1/2": "50%",
+        "auto": "auto",
+      },
       colors: {
         primary: {
           50: "#f0f9ff",

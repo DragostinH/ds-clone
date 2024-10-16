@@ -17,27 +17,26 @@ const useSidebarRoutes = () => {
 
   const channels = [
     {
-      label: "Channels",
-      href: "/channels",
+      label: "General",
+      href: "/channels/general",
       icon: "",
-      active: pathName === "/channels" || pathName === `/channels/${channelId}`,
+      active: pathName === "/channels/general" || pathName === `/channels/general/${channelId}`,
+    },
+    {
+      label: "Random",
+      href: "/channels/random",
+      icon: "",
+      active: pathName === "/channels/random" || pathName === `/channels/random/${channelId}`,
+    },
+    {
+      label: "Development",
+      href: "/channels/development",
+      icon: "",
+      active: pathName === "/channels/development" || pathName === `/channels/development/${channelId}`,
     },
   ];
 
-  const routes = useMemo(
-    () => [
-      {
-        label: "Messages",
-        href: "/channels/messages",
-        icon: "",
-        active:
-          pathName === "/channels/messages" ||
-          pathName === `/channels/messages/${conversationId}`,
-      },
-      ...channels,
-    ],
-    [pathName, conversationId, channelId]
-  );
+  const routes = useMemo(() => [...channels], [pathName, conversationId, channelId]);
 
   return routes;
 };
