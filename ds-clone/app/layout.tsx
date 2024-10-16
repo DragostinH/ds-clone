@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthContext } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import ToasterContext from "./context/ToasterContext";
+import LayoutFooter from "./(site)/components/Footer";
 
 export const metadata: Metadata = {
   title: "Discord Clone",
@@ -16,18 +17,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="">
+      <body className="flex flex-col">
         <AuthContext>
           <ToasterContext />
           {children}
+          <LayoutFooter />
         </AuthContext>
-        <footer className="absolute bottom-0 w-full text-center text-gray-500">
-          {" "}
-          © 2024 Discord Clone. Made with ❤️ by{" "}
-          <a target="_blank" href="https://github.com/DragostinH/ds-clone">
-            @DragostinH
-          </a>
-        </footer>
       </body>
     </html>
   );

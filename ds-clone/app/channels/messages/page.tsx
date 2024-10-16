@@ -1,10 +1,10 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import EmptyState from "../components/EmptyState";
+import EmptyState from "../../components/EmptyState";
 
 const Messages = () => {
   const router = useRouter();
@@ -16,9 +16,13 @@ const Messages = () => {
       router.push("/");
     });
   };
+
+  
   return (
     <div className="hidden lg:block lg:pl-80 h-full">
       <EmptyState />
+
+      <div className="">asdasd</div>
     </div>
   );
 };
