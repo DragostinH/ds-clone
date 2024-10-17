@@ -15,8 +15,9 @@ export default async function ChannelLayout({ children }: { children: ReactNode 
     <Sidebar>
       <div className="h-full w-full overflow-hidden flex border-[1px] ">
         <ServerSidebar />
-        <BaseContainer />
-        {children}
+        <div className="flex-grow flex">
+          <BaseContainer users={users}>{children}</BaseContainer>
+        </div>
       </div>
     </Sidebar>
   );

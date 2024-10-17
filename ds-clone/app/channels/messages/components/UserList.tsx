@@ -10,7 +10,6 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
   return (
     <aside
       className="
-	  fixed
 	  inset-y-0
 	  pb-20
 	  lg:pb-0
@@ -24,25 +23,23 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
 	  w-full
 	  left-0
 	  ">
-      <div className="px-5">
-        <div className="flex-col">
-          <div
-            className="text-2xl
+      <div className="flex-col">
+        <div
+          className="text-2xl
 			font-bold
 			text-neutral-800
 			py-4">
-            Users
-          </div>
+          Users
         </div>
-        {users.map((user: User) => {
-          return (
-            <UserItem
-              key={user.id}
-              user={user}
-            />
-          );
-        })}
       </div>
+      {users.map((user: User) => {
+        return (
+          <UserItem
+            key={user.id}
+            user={user}
+          />
+        );
+      })}
     </aside>
   );
 };

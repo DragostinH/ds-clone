@@ -38,7 +38,7 @@ const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentUser }) => {
         overflow-hidden
         pr-0
         ">
-          <MessagesRouteLink active={sidebarRoutes[0].active} />
+          <MessagesRouteLink />
           <LineSeparator />
           {/* Server list */}
           <ul

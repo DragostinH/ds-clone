@@ -4,11 +4,16 @@ import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import client from "@/app/libs/prismadb";
-import User from "@/api/models/User";
+const process = require('process');
 const bcrypt = require('bcryptjs');
 
 
 export const options: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
+
+  secret: process.env.NEXTAUTH_SECRET as string,
   adapter: PrismaAdapter(client),
   providers: [
     GithubProvider({
@@ -42,16 +47,10 @@ export const options: NextAuthOptions = {
 
         if (!isMatch) throw new Error("Invalid credentials");
 
-        return { ...rest };
+        return { ...rest, user: user.id };
 
       },
     }),
   ],
-  debug: process.env.NODE_ENV === "development",
-  session: {
-    strategy: "jwt",
-  },
-
-  secret: process.env.AUTH_SECRET,
   // pages:{},
 };

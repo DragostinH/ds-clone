@@ -1,4 +1,17 @@
-const BaseContainer = () => {
+"use client";
+
+import UserList from "@/app/channels/messages/components/UserList";
+import { User } from "@prisma/client";
+import { usePathname } from "next/navigation";
+import { ReactNode, useMemo } from "react";
+
+function BaseContainer({ children, users }: { children: ReactNode; users: User[] }) {
+  const pathName = usePathname();
+
+  useMemo(() => {
+    console.log(pathName);
+  }, [pathName]);
+  console.log(pathName);
   return (
     <div className="base_ flex flex-col overflow-hidden relative grow">
       <div
@@ -31,7 +44,7 @@ const BaseContainer = () => {
           flex-col 
           border-[1px]"
             aria-label="server name">
-            bigger nav
+            {pathName.startsWith("/channels/messages") ? <UserList users={users} /> : <div>Server name and channels</div>}
           </nav>
           <section
             className="
@@ -61,7 +74,8 @@ const BaseContainer = () => {
             </div>
           </section>
         </aside>
-        <div className="
+        <div
+          className="
         chat_
         flex-auto
         min-w-0
@@ -71,11 +85,11 @@ const BaseContainer = () => {
         relative
         overflow-hidden
         ">
-          asd
+          {children}
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default BaseContainer;
