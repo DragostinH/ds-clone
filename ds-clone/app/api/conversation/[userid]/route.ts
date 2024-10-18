@@ -1,67 +1,74 @@
 import { NextRequest, NextResponse } from "next/server";
-import { options } from "../../auth/[...nextauth]/options";
-import { getServerSession } from "next-auth";
 import { getToken } from "next-auth/jwt";
-
+import prisma from "@/app/libs/prismadb"; // Assuming prisma client is correctly set up
 
 export async function GET(req: NextRequest, { params }: { params: { userid: string } }) {
-    try {
-        const session: any = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-        if (!session) return NextResponse.error();
+  try {
+    const session: any = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-        const sessionEmail = session.email;
-
-        const loggedUserId = await prisma?.user.findUnique({
-            where: {
-                email: sessionEmail
-            }
-        });
-
-        const user = await prisma?.user.findUnique({
-            where: {
-                id: params.userid
-            }
-        });
-
-        const conversation = await prisma?.conversation.findFirst({
-            // find if conversation exists between the two users in their conversationIds array relationship
-            where: {
-                AND: [
-                    {
-                        users: {
-                            some: {
-                                id: loggedUserId?.id
-                            }
-                        }
-                    },
-                    {
-                        users: {
-                            some: {
-                                id: user?.id
-                            }
-                        }
-                    }
-                ]
-            }
-        });
-
-        if (!conversation) {
-            const newConversation = await prisma?.conversation.create({
-                data: {
-                    users: {
-                        connect: [
-                            { id: loggedUserId?.id },
-                            { id: user?.id }
-                        ]
-                    }
-                }
-            });
-
-            return NextResponse.json({ conversation: newConversation });
-        }
-        return NextResponse.json({ conversation: conversation });
-
-    } catch (error) {
-        return NextResponse.error();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const sessionEmail = session.email;
+
+    const loggedUser = await prisma?.user.findUnique({
+      where: {
+        email: sessionEmail,
+      },
+    });
+
+    if (!loggedUser) {
+      return NextResponse.json({ error: "Logged in user not found" }, { status: 404 });
+    }
+
+    const user = await prisma?.user.findUnique({
+      where: {
+        id: params.userid,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // find if conversation exists between the two users in their conversationIds array relationship
+    const conversation = await prisma?.conversation.findFirst({
+      where: {
+        AND: [
+          {
+            users: {
+              some: {
+                id: loggedUser.id,
+              },
+            },
+          },
+          {
+            users: {
+              some: {
+                id: user.id,
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    if (!conversation) {
+      const newConversation = await prisma?.conversation.create({
+        data: {
+          users: {
+            connect: [{ id: loggedUser.id }, { id: user.id }],
+          },
+        },
+      });
+
+      return NextResponse.json({ conversation: newConversation, session }, { status: 201 });
+    }
+
+    return NextResponse.json({ conversation, session }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching conversation:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
 }

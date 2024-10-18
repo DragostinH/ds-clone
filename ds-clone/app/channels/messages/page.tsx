@@ -8,8 +8,6 @@ import getAuthUser from "@/app/actions/getAuthUser";
 import { useEffect, useState } from "react";
 
 const Messages = () => {
-  const currentUser = getAuthUser();
-  console.log("currentUser");
 
   return (
     <div className="h-full">

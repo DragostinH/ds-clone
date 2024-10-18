@@ -4,13 +4,21 @@ import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import client from "@/app/libs/prismadb";
-const process = require('process');
-const bcrypt = require('bcryptjs');
-
+const process = require("process");
+const bcrypt = require("bcryptjs");
 
 export const options: NextAuthOptions = {
   session: {
     strategy: "jwt",
+  },
+
+  callbacks: {
+    async session({ session, user, token }) {
+      if (session && session.user) {
+        (session.user as { id: string }).id = token.sub;
+      }
+      return session;
+    },
   },
 
   secret: process.env.NEXTAUTH_SECRET as string,
@@ -48,7 +56,6 @@ export const options: NextAuthOptions = {
         if (!isMatch) throw new Error("Invalid credentials");
 
         return { ...rest, user: user.id };
-
       },
     }),
   ],

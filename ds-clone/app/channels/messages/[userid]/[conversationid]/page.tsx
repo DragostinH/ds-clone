@@ -9,7 +9,7 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const [conversation, setConversation] = useState(null);
   const userid = useParams().userid;
-  const session = useSession().data?.user;
+  const session = useSession().data?.user as { id: string };
   const conversationId = useParams().conversationid;
 
   const fetchConversation = async () => {
@@ -20,8 +20,12 @@ const Chat = () => {
 
   return (
     <div className="">
-      <div className="">
-        {userid} + {session?.name}
+      <div className="flex gap-4">
+        <span>clicked user id: {userid}</span>
+
+        <span>logged user id: {session?.id}</span>
+
+        <span>conversation id: {conversationId}</span>
       </div>
     </div>
   );

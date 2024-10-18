@@ -4,14 +4,10 @@ import UserList from "@/app/channels/messages/components/UserList";
 import { User } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { ReactNode, useMemo } from "react";
+import LoggedUserBox from "./LoggedUserBox";
 
 function BaseContainer({ children, users }: { children: ReactNode; users: User[] }) {
   const pathName = usePathname();
-
-  useMemo(() => {
-    console.log(pathName);
-  }, [pathName]);
-  console.log(pathName);
   return (
     <div className="base_ flex flex-col overflow-hidden relative grow">
       <div
@@ -38,41 +34,18 @@ function BaseContainer({ children, users }: { children: ReactNode; users: User[]
           <nav
             className="
           container_
+          privateChannels_
           relative 
           overflow-hidden 
+          select-none
+          flex-1
           flex 
           flex-col 
           border-[1px]"
             aria-label="server name">
             {pathName.startsWith("/channels/messages") ? <UserList users={users} /> : <div>Server name and channels</div>}
           </nav>
-          <section
-            className="
-            user-panel_
-            flex-grow-0
-            flex-shrink-0
-            basis-auto
-            z-2">
-            <div
-              className="
-              wrapper_
-              relative
-              overflow-visible
-              "></div>
-            <div
-              className="
-              h-14
-              text-xs
-              weight-500
-              flex
-              items-center
-              relative
-              border-[1px]
-              border-black
-              ">
-              user panel
-            </div>
-          </section>
+          <LoggedUserBox />
         </aside>
         <div
           className="

@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
-import { Channel } from "@prisma/client";
 
 export async function GET(req: Request) {
-    try {
-        const channels = await prisma?.conversation.findMany();
-        return NextResponse.json(channels);
-    } catch (error) {
-        return NextResponse.error();
-    }
+  try {
+    const conversations = await prisma?.conversation.findMany();
+    return NextResponse.json({ conversations });
+  } catch (error) {
+    return NextResponse.error();
+  }
 }
 
 // export async function POST(req: Request) {
@@ -40,7 +39,6 @@ export async function GET(req: Request) {
 //         return NextResponse.error();
 //     }
 // }
-
 
 // export async function DELETE(req: Request) {
 //     try {

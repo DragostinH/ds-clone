@@ -22,12 +22,7 @@ const AuthForm = () => {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("checking auth");
-    console.log(session.status);
-
     if (session.status === "authenticated") {
-      console.log("checking auth and its auth");
-
       router.push("/channels/messages");
     }
   }, [session.status, router]);

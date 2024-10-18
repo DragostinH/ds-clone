@@ -9,7 +9,7 @@ const MessagesRouteLink = () => {
   const Icon = BsChatDots;
   const router = useRouter();
   const pathName = usePathname();
-  const active = pathName === "/channels/messages";
+  const active = pathName.match("/channels/messages");
   return (
     <Link
       href="/channels/messages"

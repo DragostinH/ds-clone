@@ -10,6 +10,7 @@ import BaseContainer from "../components/sidebar/Base/BaseContainer";
 
 export default async function ChannelLayout({ children }: { children: ReactNode }) {
   const currentUser = await getAuthUser();
+  
   const users = (await getUsers()) || [];
   return (
     <Sidebar>

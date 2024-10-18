@@ -133,8 +133,6 @@ router.post('/register', async (req, res) => {
             password: hashedPassword,
         });
 
-        console.log(user);
-
         await user.save();
         res.json({ message: 'User registered', name: user.name, email: user.email });
 

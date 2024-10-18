@@ -9,7 +9,8 @@ const getAuthUser = async () => {
       where: { email: session?.user?.email },
     });
 
-    if (!currentUser) return null;
+    if (!currentUser) throw new Error("User not found");
+
     return currentUser;
   } catch (error) {
     return null;

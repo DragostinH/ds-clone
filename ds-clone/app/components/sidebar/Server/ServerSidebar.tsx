@@ -6,6 +6,7 @@ import MessagesRouteLink from "./MessagesRouteLink";
 import React from "react";
 import useSidebarRoutes from "@/app/hooks/useSidebarRoutes";
 import DesktopSidebarItem from "./DesktopSidebarItem";
+import LogoutButton from "../LogoutButton";
 
 interface ServerSidebarProps {
   currentUser?: User;
@@ -65,6 +66,7 @@ const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentUser }) => {
           </ul>
         </div>
       </ul>
+      <LogoutButton />
     </nav>
   );
 };
