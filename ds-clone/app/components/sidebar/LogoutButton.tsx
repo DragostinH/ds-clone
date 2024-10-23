@@ -20,7 +20,9 @@ const LogoutButton = () => {
       <button
         onClick={handleSignout}
         className="group flex items-center">
-        <div className="flex mx-3 h-[48px] w-[48px] rounded-3xl group-hover:rounded-2xl transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700 group-hover:bg-primary-300">
+        <div
+          className="flex border-primary-300 border-[1px] mx-3 h-[48px] w-[48px] rounded-3xl group-hover:rounded-2xl transition-all overflow-hidden items-center justify-center bg-background
+        group-hover:bg-primary-900 dark:bg-neutral-700 dark:group-hover:bg-primary-300 dark:group-hover:text-primary-900">
           <Icon />
         </div>
       </button>

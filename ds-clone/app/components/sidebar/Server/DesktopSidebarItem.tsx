@@ -28,7 +28,6 @@ export const DesktopSidebarItem = ({ id, name, imageUrl }: DesktopSidebarItemPro
         className="group relative flex items-center"
         onClick={onClick}>
         {/* SelectedItemIndicator */}
-        {/* <SelectedItemIndicator condition={serverId === id} /> */}
         <div className={cn("absolute left-0 bg-primary rounded-r-full transition-all w-1", serverId !== id && "group-hover:h-5", serverId === id ? "h-9" : "h-2")} />
         <div className={cn("relative group flex mx-3 h-12 w-12 rounded-3xl group-hover:rounded-2xl transition-all overflow-hidden", serverId === id && "bg-primary/10 text-primary rounded-2xl")}>
           <Image
@@ -36,7 +35,6 @@ export const DesktopSidebarItem = ({ id, name, imageUrl }: DesktopSidebarItemPro
             alt={`${name} server icon`}
             width={48}
             height={48}
-            layout="fixed"
           />
         </div>
       </button>

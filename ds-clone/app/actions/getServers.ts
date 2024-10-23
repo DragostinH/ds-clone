@@ -1,6 +1,6 @@
 import getSession from "./getSession";
 
-const getServer = async () => {
+const getServers = async () => {
   try {
     const session = await getSession();
     if (!session?.user?.email) return null;
@@ -11,7 +11,7 @@ const getServer = async () => {
 
     if (!loggedUser) throw new Error("User not found");
 
-    const servers = await prisma?.server.findFirst({
+    const servers = await prisma?.server.findMany({
       where: {
         members: {
           some: {
@@ -21,12 +21,12 @@ const getServer = async () => {
       },
     });
 
-    if (!servers) throw new Error("Server not found");
+    if (!servers) throw new Error("Servers not found");
 
     return servers;
   } catch (error) {
-    return null;
+    console.error(error);
   }
 };
 
-export default getServer;
+export default getServers;
