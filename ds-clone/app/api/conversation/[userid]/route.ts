@@ -52,6 +52,11 @@ export async function GET(req: NextRequest, { params }: { params: { userid: stri
           },
         ],
       },
+
+      include: {
+        users: true,
+        messages: true,
+      },
     });
 
     if (!conversation) {
@@ -63,10 +68,10 @@ export async function GET(req: NextRequest, { params }: { params: { userid: stri
         },
       });
 
-      return NextResponse.json({ conversation: newConversation, session }, { status: 201 });
+      return NextResponse.json({ newConversation }, { status: 201 });
     }
 
-    return NextResponse.json({ conversation, session }, { status: 200 });
+    return NextResponse.json({ conversation }, { status: 200 });
   } catch (error) {
     console.error("Error fetching conversation:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

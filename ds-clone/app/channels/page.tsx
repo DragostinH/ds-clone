@@ -13,15 +13,6 @@ const Channels = () => {
     router.push("/channels/messages");
   });
   return (
-    // <div className="">
-    // 	{isLoading ? (
-    // 		<FullScreenLoader />
-    // 	) : (
-    // 		<div className="hidden lg:block lg:pl-80 h-full">
-    // 			<EmptyState />
-    // 		</div>
-    // 	)}
-    // </div>
     <div className="">
       <div className="">some data</div>
     </div>

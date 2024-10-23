@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "@/app/components/Button";
 import Input from "@/app/components/inputs/Input";
 import { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
@@ -10,6 +9,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -26,6 +26,7 @@ const AuthForm = () => {
       router.push("/channels/messages");
     }
   }, [session.status, router]);
+
   const handleVariant = useCallback(() => {
     setVariant((prev) => (prev === "LOGIN" ? "REGISTER" : "LOGIN"));
   }, [variant]);
@@ -71,7 +72,6 @@ const AuthForm = () => {
         ...data,
         redirect: false,
       }).then((callback) => {
-
         if (callback?.error) {
           toast.error(callback.error);
           return;
@@ -104,6 +104,7 @@ const AuthForm = () => {
       setLoading(false);
     } catch (error) {}
   };
+
   return (
     <div className="bg-gray-200 shadow-md px-4 py-8 sm:rounded-lg sm:px-10">
       <form
@@ -140,8 +141,9 @@ const AuthForm = () => {
 
         <div className="">
           <Button
+            className="w-full"
             disabled={isLoading}
-            fullWidth
+            size="default"
             type="submit">
             {variant === "LOGIN" ? "Login" : "Register"}
           </Button>
