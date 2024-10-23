@@ -5,7 +5,7 @@ import LineSeparator from "./LineSeparator";
 import MessagesRouteLink from "./MessagesRouteLink";
 import React from "react";
 import useSidebarRoutes from "@/app/hooks/useSidebarRoutes";
-import DesktopSidebarItem from "./DesktopSidebarItem";
+import { DesktopSidebarItem } from "./DesktopSidebarItem";
 import LogoutButton from "../LogoutButton";
 
 interface ServerSidebarProps {
@@ -17,14 +17,16 @@ const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentUser }) => {
   return (
     <nav
       className="
+    h-full
     w-[72px] 
-    relative 
     shrink-0 
+    inset-y-0
+    fixed
     overflow-y-hidden
     overflow-x-hidden 
     flex 
     flex-col 
-    border-[1px]">
+    z-30">
       <ul
         className="
         flex
@@ -51,18 +53,7 @@ const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentUser }) => {
           gap-2
           mt-2
           ">
-            <span className="text-xs">Channels</span>
-            {sidebarRoutes.map((route) => {
-              return (
-                <DesktopSidebarItem
-                  key={route.label}
-                  label={route.label}
-                  href={route.href}
-                  icon={route.icon}
-                  active={route.active}
-                />
-              );
-            })}
+      
           </ul>
         </div>
       </ul>

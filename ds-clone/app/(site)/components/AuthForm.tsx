@@ -23,7 +23,7 @@ const AuthForm = () => {
 
   useEffect(() => {
     if (session.status === "authenticated") {
-      router.push("/channels/messages");
+      router.push("/messages");
     }
   }, [session.status, router]);
 
@@ -52,7 +52,7 @@ const AuthForm = () => {
             ...data,
             redirect: false,
           });
-          router.push("/channels/messages");
+          router.push("/messages");
         }
 
         if (response.status === 400) {
@@ -79,7 +79,7 @@ const AuthForm = () => {
 
         if (callback?.ok) {
           toast.success("Logged in successfully");
-          router.push("/channels/messages");
+          router.push("/messages");
         }
       });
     } catch (error) {

@@ -32,8 +32,11 @@ model User {
   accounts Account[]
   messages Message[]
 
-}
+  servers Server[]
+  members Member[]
 
+  channels Channel[]
+}
 
 model Account {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
@@ -89,36 +92,72 @@ model Message {
 }
 
 model Role {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String @unique
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
 }
 
 model Permission {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String @unique
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
 }
 
 model Server {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name         String         @unique
-  channels     Channel[]
-}
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  name       String  @unique
+  imageUrl   String? @default("http://picsum.photos/200")
+  inviteCode String? @unique
 
-model RoleHasUser {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @db.ObjectId
-  roleId String @db.ObjectId
-  @@unique([userId, roleId])
+  user   User   @relation(fields: [userId], references: [id])
+
+  channels Channel[]
+  members  Member[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
+enum MemberRole {
+  OWNER
+  MODERATOR
+  GUEST
+}
+
+model Member {
+  id   String     @id @default(auto()) @map("_id") @db.ObjectId
+  role MemberRole @default(GUEST)
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  serverId String @db.ObjectId
+  server   Server @relation(fields: [serverId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 model Channel {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  server   Server    @relation(fields: [serverId], references: [id])
-  serverId String    @db.ObjectId
-  type     String    @default("text")
+  id   String      @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  type ChannelType @default(TEXT)
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  serverId String @db.ObjectId
+  server   Server @relation(fields: [serverId], references: [id])
+
   messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ChannelType {
+  TEXT
+  VOICE
+  VIDEO
 }
 
 model Session {

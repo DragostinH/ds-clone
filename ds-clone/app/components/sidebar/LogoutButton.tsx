@@ -1,41 +1,30 @@
-import clsx from "clsx";
+"use client";
+
 import { signOut } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BiArrowToLeft } from "react-icons/bi";
+import ActionTooltip from "../ActionTooltip";
 
 const LogoutButton = () => {
   const router = useRouter();
   const Icon = BiArrowToLeft;
   const handleSignout = async () => {
     await signOut({ redirect: false });
-    router.push("/");
+    router.push("/login");
   };
   return (
-    <div
-      className="logout_
-        flex
-        items-center
-        justify-center
-        relative
-        overflow-hidden
-        p-2
-    ">
-      <div
-        onClick={() => {
-          handleSignout();
-        }}
-        className={clsx(
-          "border-[1px] h-12 w-12 items-center flex justify-center rounded-full",
-          "cursor-pointer transition-all duration-600 ease-in-out",
-          "hover:transform hover:scale-90 hover:rotate-[-24deg] hover:bg-opacity-50",
-          "hover:shadow-lg hover:border-transparent"
-        )}>
-        <div>
+    <ActionTooltip
+      label="Logout"
+      align="center"
+      side="right">
+      <button
+        onClick={handleSignout}
+        className="group flex items-center">
+        <div className="flex mx-3 h-[48px] w-[48px] rounded-3xl group-hover:rounded-2xl transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700 group-hover:bg-primary-300">
           <Icon />
         </div>
-      </div>
-    </div>
+      </button>
+    </ActionTooltip>
   );
 };
 

@@ -3,37 +3,15 @@
 import { useSession } from "next-auth/react";
 
 const LoggedUserBox = () => {
-  const {data: loggedUser} = useSession();
+  const { data: loggedUser } = useSession();
 
   if (!loggedUser) return null;
   return (
-    <section
-      className="
-          user-panel_
-          flex-grow-0
-          flex-shrink-0
-          basis-auto
-          z-2">
-      <div
-        className="
-            wrapper_
-            relative
-            overflow-visible
-            "></div>
-      <div
-        className="
-            h-14
-            text-xs
-            weight-500
-            flex
-            items-center
-            relative
-            border-[1px]
-            border-black
-            ">
-        {loggedUser?.user?.name}
+    <button className="group flex items-center">
+      <div className="flex mx-3 h-[48px] w-[48px] rounded-3xl group-hover:rounded-2xl transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700 group-hover:bg-primary-300">
+        U
       </div>
-    </section>
+    </button>
   );
 };
 

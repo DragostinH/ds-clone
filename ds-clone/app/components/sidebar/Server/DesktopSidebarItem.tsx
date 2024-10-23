@@ -1,46 +1,45 @@
 "use client";
-import clsx from "clsx";
-import Link from "next/link";
 import React from "react";
+import ActionTooltip from "../../ActionTooltip";
+import { useParams, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import SelectedItemIndicator from "./SelectedItemIndicator";
 
 interface DesktopSidebarItemProps {
-	label: string;
-	href: string;
-	icon?: string;
-	active: boolean;
+  id: string;
+  name: string;
+  imageUrl: string;
 }
 
-const DesktopSidebarItem: React.FC<DesktopSidebarItemProps> = ({
-	label,
-	href,
-	icon: Icon,
-	active,
-}) => {
-	return (
-		<Link
-			href={href}
-			className={clsx(
-				"border-2",
-				"rounded-full",
-				"h-12",
-				"w-12",
-				"items-center",
-				"flex",
-				"justify-center",
-				"cursor-pointer",
-				"transition-all",
-				"duration-600",
-				"ease-in-out",
-				"hover:transform",
-				"hover:scale-90",
-				"hover:rotate-[6deg]",
-				"hover:bg-opacity-50",
-				"hover:shadow-md",
-				{
-					"bg-primary-100": active,
-				}
-			)}></Link>
-	);
-};
+export const DesktopSidebarItem = ({ id, name, imageUrl }: DesktopSidebarItemProps) => {
+  const { serverId } = useParams();
+  const router = useRouter();
+  const onClick = () => {
+    router.push(`/servers/${id}`);
+  };
 
-export default DesktopSidebarItem;
+  return (
+    <ActionTooltip
+      side="right"
+      align="center"
+      label={name}>
+      <button
+        className="group relative flex items-center"
+        onClick={onClick}>
+        {/* SelectedItemIndicator */}
+        {/* <SelectedItemIndicator condition={serverId === id} /> */}
+        <div className={cn("absolute left-0 bg-primary rounded-r-full transition-all w-1", serverId !== id && "group-hover:h-5", serverId === id ? "h-9" : "h-2")} />
+        <div className={cn("relative group flex mx-3 h-12 w-12 rounded-3xl group-hover:rounded-2xl transition-all overflow-hidden", serverId === id && "bg-primary/10 text-primary rounded-2xl")}>
+          <Image
+            src="https://picsum.photos/200"
+            alt={`${name} server icon`}
+            width={48}
+            height={48}
+            layout="fixed"
+          />
+        </div>
+      </button>
+    </ActionTooltip>
+  );
+};
