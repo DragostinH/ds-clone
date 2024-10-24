@@ -5,7 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import client from "@/app/libs/prismadb";
 const process = require("process");
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs"; // Note: Check the library is correctly imported
 
 export const options: NextAuthOptions = {
   session: {
@@ -41,6 +41,7 @@ export const options: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
 
+
       async authorize(credentials) {
         if (!credentials || !credentials.email || !credentials.password) throw new Error("Missing credentials");
 
@@ -48,14 +49,22 @@ export const options: NextAuthOptions = {
           where: { email: credentials.email },
         });
 
+        console.log("user", user);
+        
+
+
         if (!user || !user?.password) throw new Error("Invalid credentials");
 
-        const { password, ...rest } = user;
-        const isMatch = await bcrypt.compare(credentials?.password, password);
+        const isMatch = await bcrypt.compare(credentials?.password, user.password);
 
-        if (!isMatch) throw new Error("Invalid credentials");
+        if (!isMatch) {
+          // console.log(await bcrypt.decode(credentials?.password, 10));
 
-        return { ...rest, user: user.id };
+          throw new Error("Invalid credentials");
+
+        };
+
+        return { id: user.id, nickName: user?.nickname, email: user.email, image: user.image };
       },
     }),
   ],

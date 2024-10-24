@@ -37,7 +37,7 @@ const AuthForm = () => {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      name: "",
+      nickname: "",
       email: "",
       password: "",
     },
@@ -112,8 +112,8 @@ const AuthForm = () => {
         onSubmit={handleSubmit(onSubmit)}>
         {variant === "REGISTER" && (
           <Input
-            id="name"
-            label="Name"
+            id="nickname"
+            label="Nickname"
             type="text"
             register={register}
             errors={errors}

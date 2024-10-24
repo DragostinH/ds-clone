@@ -23,9 +23,10 @@ export const DesktopSidebarItem = ({ id, name, imageUrl }: DesktopSidebarItemPro
     <ActionTooltip
       side="right"
       align="center"
-      label={name}>
+      label={name}
+      >
       <button
-        className="group relative flex items-center"
+        className="group relative flex items-center mb-2"
         onClick={onClick}>
         {/* SelectedItemIndicator */}
         <div className={cn("absolute left-0 bg-primary rounded-r-full transition-all w-1", serverId !== id && "group-hover:h-5", serverId === id ? "h-9" : "h-2")} />

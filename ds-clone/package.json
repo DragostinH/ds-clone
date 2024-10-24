@@ -27,6 +27,7 @@
     "@tailwindcss/forms": "^0.5.9",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
+    "bson": "^6.9.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cookie-parser": "^1.4.6",

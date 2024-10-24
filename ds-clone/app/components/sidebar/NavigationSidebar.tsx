@@ -1,5 +1,3 @@
-"use client";
-
 import { redirect } from "next/navigation";
 
 import getAuthUser from "@/app/actions/getAuthUser";
@@ -15,30 +13,13 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const NavigationSidebar = () => {
-  const { data: session } = useSession();
-  const [servers, setServers] = useState([]);
+const NavigationSidebar = async () => {
+  const session = await getAuthUser();
 
-  useEffect(() => {
-    if (session?.user) {
-      const fetchServers = async () => {
-        const resp = await axios.get("/api/server", {
-          params: {
-            userId: session.user?.id,
-          },
-        });
-        if (resp) {
-          setServers(resp);
-        }
-      };
-
-      fetchServers();
-    }
-  }, [session]);
-
-  if (!session) redirect("/login");
-
-  // const servers = getServers();
+  if (!session) {
+    redirect("/login");
+  }
+  const servers = await getServers();
 
   return (
     <div className="space-y-4 flex flex-col items-center h-full text-primary-400 w-full dark:bg-[#1E1F22] py-3">
@@ -49,7 +30,7 @@ const NavigationSidebar = () => {
       />
       <ScrollArea className="flex-1 w-full">
         {servers &&
-          servers.map((server) => {
+          servers?.map((server) => {
             return (
               <DesktopSidebarItem
                 key={server.id}

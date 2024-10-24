@@ -4,26 +4,7 @@ import { getSession } from "next-auth/react";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
-export async function GET(req: NextRequest, res: NextResponse) {
-  try {
-    const { userId } = await req.json();
 
-    const servers = await prisma?.server.findMany({
-      where: {
-        members: {
-          some: {
-            userId,
-          },
-        },
-      },
-    });
-
-    return NextResponse.json({ servers });
-  } catch (error) {
-    console.log("[SERVER_GET_ERROR]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
-  }
-}
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
