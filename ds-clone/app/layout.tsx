@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { AuthContext } from "./context/AuthContext";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { Toaster } from "react-hot-toast";
+import ToasterContext from "./context/ToasterContext";
+import LayoutFooter from "./(site)/components/Footer";
+import { ThemeProvider } from "@/components/providers/theme.provider";
+import { cn } from "@/lib/utils";
+import { ModalProvider } from "@/components/providers/modal-provider";
 
 export const metadata: Metadata = {
   title: "Discord Clone",
@@ -25,11 +19,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthContext>{children}</AuthContext>
+    <html
+      lang="en"
+      suppressHydrationWarning>
+      <body className={cn("bg-white dark:bg-[#313338]")}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem={true}
+          storageKey="discord-theme">
+          <AuthContext>
+            <ToasterContext />
+            <ModalProvider />
+            {children}
+            <LayoutFooter />
+          </AuthContext>
+        </ThemeProvider>
       </body>
     </html>
   );

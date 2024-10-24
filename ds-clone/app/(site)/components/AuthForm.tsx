@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "@/app/components/Button";
 import Input from "@/app/components/inputs/Input";
 import { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
@@ -8,6 +7,9 @@ import AuthSocialButton from "./AuthSocialButton";
 import { FaGoogle, FaGithub, FaReddit } from "react-icons/fa";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -24,6 +26,7 @@ const AuthForm = () => {
       router.push("/messages");
     }
   }, [session.status, router]);
+
   const handleVariant = useCallback(() => {
     setVariant((prev) => (prev === "LOGIN" ? "REGISTER" : "LOGIN"));
   }, [variant]);
@@ -34,7 +37,7 @@ const AuthForm = () => {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      name: "",
+      nickname: "",
       email: "",
       password: "",
     },
@@ -42,20 +45,46 @@ const AuthForm = () => {
 
   const handleRegister = async (data: FieldValues) => {
     try {
-      console.log("data", data);
-      console.log("registering");
+      axios.post("/api/register", data).then((response) => {
+        if (response.status === 200) {
+          toast.success("User registered successfully");
+          signIn("credentials", {
+            ...data,
+            redirect: false,
+          });
+          router.push("/messages");
+        }
+
+        if (response.status === 400) {
+          toast.error("Failed to register");
+        }
+      });
     } catch (error) {}
   };
 
   const handleLogin = async (data: FieldValues) => {
     try {
+      if (!data.email || !data.password) {
+        toast.error("Please fill in all fields");
+        return;
+      }
       await signIn("credentials", {
-        callbackUrl: "/messages",
-        email: data.email,
-        password: data.password,
+        ...data,
+        redirect: false,
+      }).then((callback) => {
+        if (callback?.error) {
+          toast.error(callback.error);
+          return;
+        }
+
+        if (callback?.ok) {
+          toast.success("Logged in successfully");
+          router.push("/messages");
+        }
       });
     } catch (error) {
       console.error(error);
+      toast.error("Failed to login");
     }
   };
 
@@ -71,19 +100,20 @@ const AuthForm = () => {
           break;
         default:
       }
+
       setLoading(false);
     } catch (error) {}
   };
+
   return (
-    <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
+    <div className="bg-gray-200 shadow-md px-4 py-8 sm:rounded-lg sm:px-10">
       <form
         className="flex flex-col space-y-4"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+        onSubmit={handleSubmit(onSubmit)}>
         {variant === "REGISTER" && (
           <Input
-            id="name"
-            label="Name"
+            id="nickname"
+            label="Nickname"
             type="text"
             register={register}
             errors={errors}
@@ -110,7 +140,11 @@ const AuthForm = () => {
         />
 
         <div className="">
-          <Button disabled={isLoading} fullWidth type="submit">
+          <Button
+            className="w-full"
+            disabled={isLoading}
+            size="default"
+            type="submit">
             {variant === "LOGIN" ? "Login" : "Register"}
           </Button>
         </div>
@@ -124,8 +158,7 @@ const AuthForm = () => {
           inset-0
           flex
           items-center
-          "
-          >
+          ">
             <div className="w-full border-t border-gray-300" />
           </div>
           <div
@@ -134,18 +167,14 @@ const AuthForm = () => {
         flex
         justify-center
         text-sm
-          "
-          >
-            <span className="bg-white px-2 text-gray-500">
-              Or continue with
-            </span>
+          ">
+            <span className="bg-gray-200 px-2 text-gray-900">Or continue with</span>
           </div>
         </div>
         <div
           className="
         mt-6 flex gap-2
-        "
-        >
+        ">
           <div className="flex gap-4 w-full">
             {iconProviders.map((Icon, index) => (
               <AuthSocialButton
@@ -164,14 +193,11 @@ const AuthForm = () => {
         mt-6
         px-2
         text-gray-500
-        "
-        >
-          <div className="">
-            {variant === "LOGIN"
-              ? "New to the site?"
-              : "Already have an account?"}
-          </div>
-          <div onClick={handleVariant} className="underline cursor-pointer">
+        ">
+          <div className="">{variant === "LOGIN" ? "New to the site?" : "Already have an account?"}</div>
+          <div
+            onClick={handleVariant}
+            className="underline cursor-pointer">
             {variant === "LOGIN" ? "Create a new account" : "Login"}
           </div>
         </div>

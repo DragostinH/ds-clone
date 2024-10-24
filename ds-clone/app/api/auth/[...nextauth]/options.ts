@@ -4,11 +4,24 @@ import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import client from "@/app/libs/prismadb";
-import User from "@/api/models/User";
-const bcrypt = require('bcryptjs');
-
+const process = require("process");
+import bcrypt from "bcryptjs"; // Note: Check the library is correctly imported
 
 export const options: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
+
+  callbacks: {
+    async session({ session, user, token }) {
+      if (session && session.user) {
+        (session.user as { id: string }).id = token.sub;
+      }
+      return session;
+    },
+  },
+
+  secret: process.env.NEXTAUTH_SECRET as string,
   adapter: PrismaAdapter(client),
   providers: [
     GithubProvider({
@@ -28,6 +41,7 @@ export const options: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
 
+
       async authorize(credentials) {
         if (!credentials || !credentials.email || !credentials.password) throw new Error("Missing credentials");
 
@@ -35,23 +49,24 @@ export const options: NextAuthOptions = {
           where: { email: credentials.email },
         });
 
+        console.log("user", user);
+        
+
+
         if (!user || !user?.password) throw new Error("Invalid credentials");
 
-        const { password, ...rest } = user;
-        const isMatch = await bcrypt.compare(credentials?.password, password);
+        const isMatch = await bcrypt.compare(credentials?.password, user.password);
 
-        if (!isMatch) throw new Error("Invalid credentials");
+        if (!isMatch) {
+          // console.log(await bcrypt.decode(credentials?.password, 10));
 
-        return { ...rest };
+          throw new Error("Invalid credentials");
 
+        };
+
+        return { id: user.id, nickName: user?.nickname, email: user.email, image: user.image };
       },
     }),
   ],
-  debug: process.env.NODE_ENV === "development",
-  session: {
-    strategy: "jwt",
-  },
-
-  secret: process.env.AUTH_SECRET,
   // pages:{},
 };

@@ -1,10 +1,15 @@
-import Input from "@/app/components/inputs/Input";
-import AuthForm from "./components/AuthForm";
+import { redirect } from "next/navigation";
+import getAuthUser from "../actions/getAuthUser";
+import getServer from "../actions/getServer";
 
-export default async function Home() {
+const Home = async () => {
+  const authUser = await getAuthUser();
+  // if (!authUser) return redirect("/login");
   return (
-    <div>
-      <AuthForm />
+    <div className="">
+      <div className=""></div>
     </div>
   );
-}
+};
+
+export default Home;

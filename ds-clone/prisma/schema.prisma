@@ -9,13 +9,14 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider     = "mongodb"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
+  nickname      String?
   email         String    @unique
   emailVerified DateTime?
   image         String?
@@ -32,8 +33,13 @@ model User {
   accounts Account[]
   messages Message[]
 
-}
+  servers Server[]
+  members Member[]
 
+  serverInvites ServerInvite[]
+
+  channels Channel[]
+}
 
 model Account {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
@@ -89,36 +95,93 @@ model Message {
 }
 
 model Role {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String @unique
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
 }
 
 model Permission {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String @unique
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
 }
 
 model Server {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name         String         @unique
-  channels     Channel[]
-}
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  imageUrl String? @default("http://picsum.photos/200")
+  // inviteCode String? @unique //removed for now because of the invite system
 
-model RoleHasUser {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @db.ObjectId
-  roleId String @db.ObjectId
-  @@unique([userId, roleId])
+  user   User   @relation(fields: [userId], references: [id])
+
+  channels Channel[]
+  members  Member[]
+
+  invites ServerInvite[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
+model ServerInvite {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  serverId  String    @db.ObjectId
+  server    Server    @relation(fields: [serverId], references: [id])
+  inviteKey String    @unique
+  expires   DateTime  @db.Date
+  isUsed    Boolean?  @default(false)
+  usedAt    DateTime? @db.Date
+  isEndless Boolean?  @default(false)
+  usedBy    String?   @db.ObjectId
+  user      User?     @relation(fields: [usedBy], references: [id])
+  link      String?   @default("")
+  maxUses   Int?      @default(1)
+  usesCount Int?      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum MemberRole {
+  OWNER
+  MODERATOR
+  GUEST
+}
+
+model Member {
+  id   String     @id @default(auto()) @map("_id") @db.ObjectId
+  role MemberRole @default(GUEST)
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  serverId String @db.ObjectId
+  server   Server @relation(fields: [serverId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 model Channel {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  server   Server    @relation(fields: [serverId], references: [id])
-  serverId String    @db.ObjectId
-  type     String    @default("text")
+  id   String      @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  type ChannelType @default(TEXT)
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  serverId String @db.ObjectId
+  server   Server @relation(fields: [serverId], references: [id])
+
   messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ChannelType {
+  TEXT
+  VOICE
+  VIDEO
 }
 
 model Session {

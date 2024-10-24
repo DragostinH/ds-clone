@@ -19,7 +19,7 @@ export default function Page() {
       setUsers(data);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -27,13 +27,5 @@ export default function Page() {
     fetchUsers();
   }, []);
 
-  return (
-    <ul>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        users.map((user) => <li key={user._id}>{user.name}</li>)
-      )}
-    </ul>
-  );
+  return <ul>{loading ? <p>Loading...</p> : users.map((user) => <li key={user._id}>{user.name}</li>)}</ul>;
 }
