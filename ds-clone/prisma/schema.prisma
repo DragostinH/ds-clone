@@ -36,6 +36,8 @@ model User {
   servers Server[]
   members Member[]
 
+  serverInvites ServerInvite[]
+
   channels Channel[]
 }
 
@@ -103,16 +105,37 @@ model Permission {
 }
 
 model Server {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  name       String  
-  imageUrl   String? @default("http://picsum.photos/200")
-  inviteCode String? @unique
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  imageUrl String? @default("http://picsum.photos/200")
+  // inviteCode String? @unique //removed for now because of the invite system
 
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
 
   channels Channel[]
   members  Member[]
+
+  invites ServerInvite[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ServerInvite {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  serverId  String    @db.ObjectId
+  server    Server    @relation(fields: [serverId], references: [id])
+  inviteKey String    @unique
+  expires   DateTime  @db.Date
+  isUsed    Boolean?  @default(false)
+  usedAt    DateTime? @db.Date
+  isEndless Boolean?  @default(false)
+  usedBy    String?   @db.ObjectId
+  user      User?     @relation(fields: [usedBy], references: [id])
+  link      String?   @default("")
+  maxUses   Int?      @default(1)
+  usesCount Int?      @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

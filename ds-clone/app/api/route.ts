@@ -7,8 +7,6 @@ import { MongoClient } from "mongodb";
 import client from "@/app/libs/prismadb";
 
 export async function GET(req: NextRequest) {
-  await client.$connect();
-  const users = await client.user.findMany();
-
+  const users = await client?.user.findMany();
   return NextResponse.json({ message: "Hello World", data: users });
 }

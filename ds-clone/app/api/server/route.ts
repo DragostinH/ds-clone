@@ -23,7 +23,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         userId: loggedUser.id,
         name,
         imageUrl,
-        inviteCode: uuidv4(),
+        // inviteCode: uuidv4(),
         channels: {
           create: [
             {
