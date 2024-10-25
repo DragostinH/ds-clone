@@ -42,6 +42,7 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
         )}
         {isOwner && (
           <DropdownMenuItem
+            onClick={() => onOpen("server-settings", { server })}
             className="rounded-sm flex items-center px-3 py-2 text-sm cursor-pointer 
           hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50
           ">
