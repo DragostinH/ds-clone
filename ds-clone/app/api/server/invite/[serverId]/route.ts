@@ -5,7 +5,11 @@ import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 import client from "@/app/libs/prismadb";
 
-export async function POST({ params }: { params: { serverId: string } }) {
+interface InviteParams {
+  serverId: string;
+}
+
+export async function POST(req: NextRequest, { params }: { params: InviteParams }) {
   try {
     const server = await client?.server.findUnique({
       where: {
@@ -24,7 +28,7 @@ export async function POST({ params }: { params: { serverId: string } }) {
         serverId: server.id,
         inviteKey: inviteKey,
         //set expiration to 1 day from now
-        expires: format(new Date(Date.now() + 24 * 60 * 60 * 1000), "yyyy-MM-dd'T'HH:mm:ss"),
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
         isEndless: true,
         // TODO: make max link uses configurable
         maxUses: 1,

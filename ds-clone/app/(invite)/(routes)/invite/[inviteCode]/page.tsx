@@ -40,8 +40,8 @@ const InviteCodePage: React.FC<InviteCodePageProps> = async ({ params: { inviteC
   const { id: serverId, imageUrl, members, name } = existingServer.server;
   const { id: serverInviteId, maxUses, isEndless, expires } = existingServer;
 
-  //   if use is already in server, redirect to server
-  if (members.find((member) => member.userId === authUser.id)) return redirect(`/server/${serverId}`);
+  //   if user is already in server, redirect to server
+  if (members.find((member) => member.userId === authUser.id)) return redirect(`/servers/${serverId}`);
 
   const serverInviteUses = await prisma?.serverInvite.findMany({
     where: {
@@ -52,7 +52,6 @@ const InviteCodePage: React.FC<InviteCodePageProps> = async ({ params: { inviteC
   if (!serverInviteUses || serverInviteUses.length === maxUses) return redirect("/");
 
   if (isEndless && compareAsc(expires, format(new Date(), "yyyy-MM-dd'T'HH:mm:ss")) === 1) {
-    const acceptInvite = async () => {};
     return (
       <div className="h-full flex flex-col items-center justify-center">
         <AcceptInviteBox
