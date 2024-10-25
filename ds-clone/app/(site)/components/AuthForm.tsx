@@ -45,20 +45,19 @@ const AuthForm = () => {
 
   const handleRegister = async (data: FieldValues) => {
     try {
-      axios.post("/api/register", data).then((response) => {
-        if (response.status === 200) {
-          toast.success("User registered successfully");
-          signIn("credentials", {
-            ...data,
-            redirect: false,
-          });
-          router.push("/messages");
-        }
+      const resp = await axios.post("/api/register", data);
+      if (resp.status === 200) {
+        toast.success("User registered successfully");
+        await signIn("credentials", {
+          ...data,
+          redirect: false,
+        });
+        router.push("/");
+      }
 
-        if (response.status === 400) {
-          toast.error("Failed to register");
-        }
-      });
+      if (resp.status === 400) {
+        toast.error("Failed to register");
+      }
     } catch (error) {}
   };
 
