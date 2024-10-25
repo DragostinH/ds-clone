@@ -13,7 +13,11 @@ const getServer = async () => {
 
     const servers = await prisma?.server.findFirst({
       where: {
-        userId: loggedUser.id,
+        members: {
+          some: {
+            userId: loggedUser.id,
+          },
+        },
       },
     });
 

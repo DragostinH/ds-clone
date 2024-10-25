@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { Copy, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 export const CreateInviteModal = () => {
   const { isOpen, onClose, type, onOpen, data } = useModal();
@@ -17,13 +17,24 @@ export const CreateInviteModal = () => {
   const origin = useOrigin();
   const { server } = data;
 
-  if (!server) console.log("[CREATE_INVITE_MODAL_SERVER_NOT_IN_DATA]");
-
   const isModalOpen = isOpen && type === "invite-member";
+  // on open, generate invite link
 
+  useEffect(() => {
+    if (isModalOpen) {
+      handleGenerateInvite();
+    }
+  }, [isModalOpen]);
 
   const handleCopy = () => {
-    //
+    if (inviteUrl === "") {
+      toast.success("Invite link is empty", {
+        icon: "🚫",
+        id: "empty-invite-link",
+      });
+
+      return;
+    }
     toast.success("Copied invite link to clipboard", {
       icon: "📋",
       id: "copy-invite-link",
@@ -33,15 +44,13 @@ export const CreateInviteModal = () => {
   };
 
   const handleGenerateInvite = async () => {
-    //
     try {
-      const res = await axios.post(`/api/server/invite/${server?.id}/`);
-      console.log(res.data);
+      const { data } = await axios.post(`/api/server/invite/${server?.id}/`);
+      setInviteUrl(data.data.link);
     } catch (error) {
       console.error(error);
     }
-
-  }
+  };
 
   return (
     <Dialog
@@ -57,6 +66,7 @@ export const CreateInviteModal = () => {
           <Label className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">Server invite link</Label>
           <div className="flex items-center mt-2 gap-x-2">
             <Input
+              readOnly
               className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
               value={inviteUrl}
             />
@@ -67,6 +77,7 @@ export const CreateInviteModal = () => {
             </Button>
           </div>
           <Button
+            onClick={handleGenerateInvite}
             variant="link"
             className="
             mt-6

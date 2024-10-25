@@ -36,9 +36,9 @@ model User {
   servers Server[]
   members Member[]
 
-  serverInvites ServerInvite[]
-
   channels Channel[]
+
+  ServerInviteUses ServerInviteUses[]
 }
 
 model Account {
@@ -120,25 +120,40 @@ model Server {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  ServerInviteUses ServerInviteUses[]
 }
 
 model ServerInvite {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  serverId  String    @db.ObjectId
-  server    Server    @relation(fields: [serverId], references: [id])
-  inviteKey String    @unique
-  expires   DateTime  @db.Date
-  isUsed    Boolean?  @default(false)
-  usedAt    DateTime? @db.Date
-  isEndless Boolean?  @default(false)
-  usedBy    String?   @db.ObjectId
-  user      User?     @relation(fields: [usedBy], references: [id])
-  link      String?   @default("")
-  maxUses   Int?      @default(1)
-  usesCount Int?      @default(0)
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  serverId  String   @db.ObjectId
+  server    Server   @relation(fields: [serverId], references: [id])
+  inviteKey String   @unique
+  expires   DateTime @db.Date
+  isEndless Boolean? @default(false)
+  maxUses   Int?     @default(1)
+  link      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  ServerInviteUses ServerInviteUses[]
+}
+
+model ServerInviteUses {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  serverId  String       @db.ObjectId
+  server    Server       @relation(fields: [serverId], references: [id])
+  inviteId  String       @db.ObjectId
+  invite    ServerInvite @relation(fields: [inviteId], references: [id])
+  usedBy    String       @db.ObjectId
+  user      User         @relation(fields: [usedBy], references: [id])
+  usedAt    DateTime     @db.Date
+  ipAddress String?
+  userAgent String?
+  referer   String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
 
 enum MemberRole {

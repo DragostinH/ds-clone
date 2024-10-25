@@ -13,7 +13,11 @@ const getServers = async () => {
 
     const servers = await prisma?.server.findMany({
       where: {
-        userId: loggedUser.id,
+        members: {
+          some: {
+            userId: { equals: loggedUser.id },
+          },
+        },
       },
     });
 
