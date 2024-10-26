@@ -1,6 +1,5 @@
-import getAuthUser from "@/app/actions/getAuthUser";
-import getServer from "@/app/actions/getServer";
-import getServerById from "@/app/actions/getServerById";
+import getAuthUser from "@/actions/getAuthUser";
+import getServerById from "@/actions/getServerById";
 import { ChannelType } from "@prisma/client";
 import { redirect } from "next/navigation";
 import React from "react";

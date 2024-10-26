@@ -1,4 +1,4 @@
-import getAuthUser from "@/app/actions/getAuthUser";
+import getAuthUser from "@/actions/getAuthUser";
 import ChannelsSidebar from "@/app/components/sidebar/Server/ChannelsSidebar";
 import { ObjectId } from "bson";
 import { redirect } from "next/navigation";
@@ -25,7 +25,8 @@ const ServerIdLayout = async ({ children, params }: { children: ReactNode; param
 
   return (
     <div className="h-full flex">
-      <aside className="hidden border-r-[1px] border-primary-900 md:flex h-full w-60 flex-col inset-y-0">
+      <aside className="md:relative border-r-[1px] border-primary-900 md:flex h-full w-60 flex-col inset-y-0">
+        
         <ChannelsSidebar serverId={serverId} />
       </aside>
       <main className="h-full">{children}</main>

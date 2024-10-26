@@ -105,9 +105,9 @@ model Permission {
 }
 
 model Server {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
   name     String
-  imageUrl String? @default("http://picsum.photos/200")
+  imageUrl String @default("http://picsum.photos/200")
   // inviteCode String? @unique //removed for now because of the invite system
 
   userId String @db.ObjectId

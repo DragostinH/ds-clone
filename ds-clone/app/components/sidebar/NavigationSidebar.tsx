@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import getAuthUser from "@/app/actions/getAuthUser";
+import getAuthUser from "@/actions/getAuthUser";
 import NavigationAction from "./NavigationAction";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -8,13 +8,12 @@ import { DesktopSidebarItem } from "./Server/DesktopSidebarItem";
 import MessagesRouteLink from "./Server/MessagesRouteLink";
 import LogoutButton from "./LogoutButton";
 import { ModeToggle } from "./ModeToggle";
-import getServers from "@/app/actions/getServers";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import getServers from "@/actions/getServers";
 
 const NavigationSidebar = async () => {
   const session = await getAuthUser();
+  console.log(session);
+  
 
   if (!session) {
     redirect("/login");

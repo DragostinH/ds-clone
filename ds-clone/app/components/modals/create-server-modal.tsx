@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import FileUpload from "../FileUpload";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -51,7 +52,7 @@ export const CreateServerModal = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      imageUrl: "aasdasda",
+      imageUrl: "",
     },
     mode: "onBlur",
   });
@@ -71,8 +72,22 @@ export const CreateServerModal = () => {
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-8">
-            <div className="space-y-8 px-6">
-              <div className="flex items-center justify-center text-center">img upload</div>
+            <div className="flex items-center justify-center text-center">
+              <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <FileUpload
+                        endpoint="serverImage"
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
 
             <FormField

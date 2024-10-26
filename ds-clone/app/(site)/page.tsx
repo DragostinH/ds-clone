@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
-import getAuthUser from "../actions/getAuthUser";
-import getServer from "../actions/getServer";
+import getAuthUser from "@/actions/getAuthUser";
 
 const Home = async () => {
   const authUser = await getAuthUser();

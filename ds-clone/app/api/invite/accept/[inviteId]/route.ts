@@ -1,4 +1,4 @@
-import getAuthUser from "@/app/actions/getAuthUser";
+import getAuthUser from "@/actions/getAuthUser";
 import client from "@/app/libs/prismadb";
 import { format } from "date-fns";
 import { NextRequest, NextResponse } from "next/server";

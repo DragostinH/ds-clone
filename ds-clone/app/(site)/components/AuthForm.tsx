@@ -52,7 +52,7 @@ const AuthForm = () => {
           ...data,
           redirect: false,
         });
-        router.push("/");
+        router.push("/messages");
       }
 
       if (resp.status === 400) {

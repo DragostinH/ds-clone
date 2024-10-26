@@ -1,4 +1,3 @@
-import getAuthUser from "@/app/actions/getAuthUser";
 
 async function UserPanel() {
 

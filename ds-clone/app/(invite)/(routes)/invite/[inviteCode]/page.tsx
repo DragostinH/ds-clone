@@ -1,5 +1,4 @@
-import { auth } from "@/app/actions/getAuth";
-import getAuthUser from "@/app/actions/getAuthUser";
+import getAuthUser from "@/actions/getAuthUser";
 import { CurrentProfile } from "@/lib/CurrentProfile";
 import { format, compareAsc } from "date-fns";
 import { redirect } from "next/navigation";
