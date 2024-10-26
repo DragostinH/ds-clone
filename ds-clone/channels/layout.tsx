@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
-import Sidebar from "../components/sidebar/Sidebar";
+import Sidebar from "../app/components/sidebar/Sidebar";
 import getAuthUser from "../actions/getAuthUser";
 import getUsers from "../actions/getUsers";
-import ServerSidebar from "../components/sidebar/Server/ServerSidebar";
-import BaseContainer from "../components/sidebar/Base/BaseContainer";
+import ServerSidebar from "../app/components/sidebar/Server/ServerSidebar";
+import BaseContainer from "../app/components/sidebar/Base/BaseContainer";
 
 export default async function ChannelLayout({ children }: { children: ReactNode }) {
   const currentUser = await getAuthUser();

@@ -1,6 +1,6 @@
 "use client";
 
-import UserList from "@/app/channels/messages/components/UserList";
+import UserList from "@/channels/messages/components/UserList";
 import { User } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { ReactNode, useMemo } from "react";

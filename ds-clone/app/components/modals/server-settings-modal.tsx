@@ -12,7 +12,6 @@ import * as z from "zod";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
-import getServer from "@/app/actions/getServer";
 
 const formSchema = z.object({
   name: z.string().min(1, {

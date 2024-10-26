@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import EmptyState from "../components/EmptyState";
+import EmptyState from "../app/components/EmptyState";
 import { useEffect, useState } from "react";
-import FullScreenLoader from "../components/loaders/FullScreenLoader";
+import FullScreenLoader from "../app/components/loaders/FullScreenLoader";
 
 const Channels = () => {
   const router = useRouter();
