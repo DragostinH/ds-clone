@@ -4,6 +4,7 @@ import { ChannelType } from "@prisma/client";
 import { redirect } from "next/navigation";
 import React from "react";
 import ServerHeader from "./ServerHeader";
+import client from "@/app/libs/prismadb";
 
 interface ChannelsSidebarProps {
   serverId: string;
@@ -13,7 +14,26 @@ const ChannelsSidebar: React.FC<ChannelsSidebarProps> = async ({ serverId }) => 
   const authUser = await getAuthUser();
   if (!authUser) return redirect("/login");
 
-  const server = await getServerById(serverId);
+  const server = await client?.server.findFirst({
+    where: {
+      id: serverId,
+    },
+    include: {
+      channels: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+      members: {
+        include: {
+          user: true,
+        },
+        orderBy: {
+          role: "asc",
+        },
+      },
+    },
+  });
   if (!server) return redirect("/messages");
 
   const textChannels = server?.channels.filter((channel) => channel.type === ChannelType.TEXT);

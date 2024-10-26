@@ -29,7 +29,7 @@ export async function GET(req: NextRequest, params: ServerUserId) {
   }
 }
 
-export async function PATCH(req: NextRequest, params: ServerUserId) {
+export async function PATCH(req: NextRequest, { params }: { params: ServerUserId }) {
   try {
     const authUser = getAuthUser();
     if (!authUser) {

@@ -7,6 +7,7 @@ import LayoutFooter from "./(site)/components/Footer";
 import { ThemeProvider } from "@/components/providers/theme.provider";
 import { cn } from "@/lib/utils";
 import { ModalProvider } from "@/components/providers/modal-provider";
+import { EdgeStoreProvider } from "./libs/edgestore";
 
 export const metadata: Metadata = {
   title: "Discord Clone",
@@ -23,18 +24,20 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning>
       <body className={cn("bg-white dark:bg-[#313338]")}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem={true}
-          storageKey="discord-theme">
-          <AuthContext>
-            <ToasterContext />
-            <ModalProvider />
-            {children}
-            <LayoutFooter />
-          </AuthContext>
-        </ThemeProvider>
+        <EdgeStoreProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem={true}
+            storageKey="discord-theme">
+            <AuthContext>
+              <ToasterContext />
+              <ModalProvider />
+              {children}
+              <LayoutFooter />
+            </AuthContext>
+          </ThemeProvider>
+        </EdgeStoreProvider>
       </body>
     </html>
   );

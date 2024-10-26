@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import FileUpload from "../FileUpload";
+import { Progress } from "@/components/ui/progress";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -63,16 +64,17 @@ export const CreateServerModal = () => {
     <Dialog
       open={isModalOpen}
       onOpenChange={handleClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
+      <DialogContent className="bg-[#1E1F22] text-black p-4 overflow-hidden">
         <DialogHeader>
-          <DialogTitle className="text-lg font-bold">Create a server</DialogTitle>
+          <DialogTitle className="text-primary-100 text-lg  text-center">Create a server</DialogTitle>
           <DialogDescription>{/* <p>Start a new server and invite your friends to join.</p> */}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-8">
-            <div className="flex items-center justify-center text-center">
+            <div className="flex flex-col items-center justify-center text-center">
+              <p className="text-white">Server Image</p>
               <FormField
                 control={form.control}
                 name="imageUrl"
@@ -80,7 +82,6 @@ export const CreateServerModal = () => {
                   <FormItem>
                     <FormControl>
                       <FileUpload
-                        endpoint="serverImage"
                         value={field.value}
                         onChange={field.onChange}
                       />
@@ -89,17 +90,16 @@ export const CreateServerModal = () => {
                 )}
               />
             </div>
-
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Server Name</FormLabel>
+                  <FormLabel className="text-primary-100 text-pretty">Server Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isLoading}
-                      className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                      className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-primary-100 focus-visible:ring-offset-0"
                       placeholder="Enter a server name"
                       {...field}
                     />
@@ -113,7 +113,7 @@ export const CreateServerModal = () => {
                 type="submit"
                 disabled={isLoading}
                 className="w-full"
-                variant="secondary">
+                variant="primary">
                 Create Server
               </Button>
             </DialogFooter>

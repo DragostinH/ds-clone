@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode: true,
     images: {
-        domains: ['picsum.photos', 'uploadthing.com', 'utfs.io'],
+        domains: ['picsum.photos', 'uploadthing.com', 'utfs.io', 'files.edgestore.dev'],
     },
 };
 

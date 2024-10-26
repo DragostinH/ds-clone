@@ -1,17 +1,18 @@
 "use client";
-
-import { useModal } from "@/app/hooks/useModalStore";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+
+import { useModal } from "@/app/hooks/useModalStore";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+import { useRouter } from "next/navigation";
 import axios from "axios";
+import FileUpload from "../FileUpload";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -30,26 +31,9 @@ const formSchema = z.object({
 export const ServerSettingsModal = () => {
   const { isOpen, onClose, type, onOpen, data } = useModal();
   const router = useRouter();
-
   const isModalOpen = isOpen && type === "server-settings";
   const { server } = data;
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      imageUrl: "",
-    },
-  });
-
-  // useEffect(() => {
-  //   if (server) {
-  //     form.setValue("name", server.name);
-  //     form.setValue("imageUrl", server.imageUrl ?? "");
-  //   }
-  // }, [server]);
-
-  const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/server/${server?.id}`, values);
@@ -59,34 +43,56 @@ export const ServerSettingsModal = () => {
     } catch (error) {
       console.error(error);
     }
+    console.log(values);
   };
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      imageUrl: "",
+    },
+    mode: "onBlur",
+  });
+
+  useEffect(() => {
+    if (server) {
+      form.setValue("name", server.name);
+      form.setValue("imageUrl", server.imageUrl);
+    }
+  }, [server, form]);
+
+  const isLoading = form.formState.isSubmitting;
 
   return (
     <Dialog
       open={isModalOpen}
       onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-4 overflow-hidden">
+      <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader>
-          <DialogTitle className="text-lg font-bold text-center">Change the server name and/or image.</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogTitle className="text-lg font-bold">Server Settings</DialogTitle>
+          <DialogDescription>{/* <p>Start a new server and invite your friends to join.</p> */}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8">
-            <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Server Image</FormLabel>
-                  <FormControl>
-                    <div className=""></div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            className="space-y-8 p-4">
+            <div className="flex items-center justify-center text-center">
+              <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <FileUpload
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -112,7 +118,7 @@ export const ServerSettingsModal = () => {
                 disabled={isLoading}
                 className="w-full"
                 variant="secondary">
-                Update Server
+                Create Server
               </Button>
             </DialogFooter>
           </form>

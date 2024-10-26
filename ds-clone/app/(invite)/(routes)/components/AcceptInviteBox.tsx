@@ -30,7 +30,7 @@ const AcceptInviteBox: FC<AcceptInviteBoxProps> = ({ serverId, serverName, serve
   };
   return (
     <Card className="bg-primary-900 border-0 w-96 flex flex-col items-center justify-center">
-      <CardHeader className="text-center">
+      <CardHeader className="items-center">
         <Image
           src={ServerImage}
           alt={serverName}

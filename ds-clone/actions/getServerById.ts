@@ -1,3 +1,4 @@
+import client from "@/app/libs/prismadb";
 import getAuthUser from "./getAuthUser";
 
 const getServerById = async (id: string) => {
@@ -5,7 +6,7 @@ const getServerById = async (id: string) => {
     const authUser = await getAuthUser();
     if (!authUser) throw new Error("Unauthorized");
 
-    const server = await prisma?.server.findFirst({
+    const server = await client?.server.findFirst({
       where: {
         members: {
           some: {

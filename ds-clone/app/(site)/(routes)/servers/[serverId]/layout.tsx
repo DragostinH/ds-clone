@@ -8,25 +8,15 @@ const ServerIdLayout = async ({ children, params }: { children: ReactNode; param
   const authUser = await getAuthUser();
   if (!authUser) return redirect("/login");
   const { serverId } = params;
+
   if (!ObjectId.isValid(serverId)) {
     console.log("Invalid server ID");
     return redirect("/messages");
   }
-  const server = await prisma?.server.findUnique({
-    where: {
-      id: serverId,
-      members: {
-        some: {
-          userId: authUser.id,
-        },
-      },
-    },
-  });
 
   return (
     <div className="h-full flex">
       <aside className="md:relative border-r-[1px] border-primary-900 md:flex h-full w-60 flex-col inset-y-0">
-        
         <ChannelsSidebar serverId={serverId} />
       </aside>
       <main className="h-full">{children}</main>

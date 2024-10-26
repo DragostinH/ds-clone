@@ -4,6 +4,7 @@ import { format, compareAsc } from "date-fns";
 import { redirect } from "next/navigation";
 import React from "react";
 import AcceptInviteBox from "../../components/AcceptInviteBox";
+import client from "@/app/libs/prismadb";
 
 interface InviteCodePageProps {
   params: {
@@ -19,7 +20,7 @@ const InviteCodePage: React.FC<InviteCodePageProps> = async ({ params: { inviteC
   if (!inviteCode) return redirect("/");
 
   //   check if server exists if not redirect to home
-  const existingServer = await prisma?.serverInvite.findFirst({
+  const existingServer = await client?.serverInvite.findFirst({
     where: {
       inviteKey: inviteCode,
     },
@@ -40,15 +41,17 @@ const InviteCodePage: React.FC<InviteCodePageProps> = async ({ params: { inviteC
   const { id: serverInviteId, maxUses, isEndless, expires } = existingServer;
 
   //   if user is already in server, redirect to server
-  if (members.find((member) => member.userId === authUser.id)) return redirect(`/servers/${serverId}`);
+  if (members.find((member) => member.userId === authUser.id)) {
+    return redirect(`/servers/${serverId}`);
+  }
 
-  const serverInviteUses = await prisma?.serverInvite.findMany({
+  const serverInviteUses = await client?.serverInviteUses.findMany({
     where: {
       serverId,
     },
   });
 
-  if (!serverInviteUses || serverInviteUses.length === maxUses) return redirect("/");
+  if (serverInviteUses.length === maxUses) return redirect("/");
 
   if (isEndless && compareAsc(expires, format(new Date(), "yyyy-MM-dd'T'HH:mm:ss")) === 1) {
     return (
@@ -63,19 +66,6 @@ const InviteCodePage: React.FC<InviteCodePageProps> = async ({ params: { inviteC
       </div>
     );
   }
-
-  // //   if (!isEndless && usesCount >= maxUses) return redirect("/");
-
-  //   //   if user is already in server, redirect to server
-  //   const isUserInServer = await prisma?.member.findFirst({
-  //     where: {
-  //       userId: authUser.id,
-  //       serverId,
-  //     },
-  //   });
-
-  //   if (isUserInServer) return redirect(`/server/${serverId}`);
-  //   if invite is valid, show join server modal
 
   return (
     <div className="h-full flex items-center justify-center flex-col">

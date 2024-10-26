@@ -1,5 +1,6 @@
 "use client";
 
+import getServerById from "@/actions/getServerById";
 import { useModal } from "@/app/hooks/useModalStore";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ServerWithMembersWithProfiles } from "@/types";
@@ -13,7 +14,7 @@ interface ServerHeaderProps {
   role?: MemberRole;
 }
 
-const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
+const ServerHeader: React.FC<ServerHeaderProps> =  ({ server, role }) => {
   const { onOpen } = useModal();
   const isOwner = role === MemberRole.OWNER;
   const isModerator = isOwner || role === MemberRole.MODERATOR;
@@ -25,6 +26,7 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
         asChild>
         <button className="w-full text-lg px-3 flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition">
           {server.name}
+          
           <ChevronDown className="w-5 h-5 ml-auto" />
         </button>
       </DropdownMenuTrigger>
