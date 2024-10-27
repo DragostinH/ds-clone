@@ -8,6 +8,8 @@ import { Progress } from "@/components/ui/progress";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { X } from "lucide-react";
+import { set } from "date-fns";
 
 interface FileUploadProps {
   value: string;
@@ -39,6 +41,26 @@ const FileUpload: FC<FileUploadProps> = ({ value, onChange }) => {
     <div>
       <SingleImageDropzone
         dropzoneOptions={{
+          async onDrop(acceptedFiles) {
+            setFile(acceptedFiles[0]);
+            const file = acceptedFiles[0];
+            if (file) {
+              const res = await edgestore.publicFiles.upload({
+                file: file,
+                onProgressChange(progress) {
+                  setProgress(progress);
+                  if (progress === 100) {
+                    toast.success("Server Picture Uploaded");
+                  }
+                },
+              });
+              setUrl(res.url);
+              onChange(res.url);
+            }
+          },
+          onError: (errors) => {
+            toast.error(errors.message);
+          },
           maxSize: 1024 * 1024 * 5, // 5MB
           onDropAccepted: (acceptedFiles) => {
             toast.success("File accepted");
@@ -51,7 +73,7 @@ const FileUpload: FC<FileUploadProps> = ({ value, onChange }) => {
           setFile(file);
         }}
       />
-      <Button
+      {/* <Button
         type="button"
         variant="primary"
         onClick={async () => {
@@ -70,7 +92,7 @@ const FileUpload: FC<FileUploadProps> = ({ value, onChange }) => {
           }
         }}>
         Upload
-      </Button>
+      </Button> */}
       <Progress
         className={cn("mt-2 bg-primary-900 ", !progress && "hidden")}
         value={progress}

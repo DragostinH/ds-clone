@@ -12,7 +12,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import FileUpload from "../FileUpload";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -30,20 +31,28 @@ const formSchema = z.object({
 
 export const ServerSettingsModal = () => {
   const { isOpen, onClose, type, onOpen, data } = useModal();
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const isModalOpen = isOpen && type === "server-settings";
   const { server } = data;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setIsLoading(true);
       await axios.patch(`/api/server/${server?.id}`, values);
       form.reset();
       router.refresh();
       onClose();
+      toast.success(`Settings for server "${values.name}" updated`, {
+        icon: "🚀",
+        duration: 4000,
+        id: "server-settings-update",
+      });
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-    console.log(values);
   };
 
   const form = useForm({
@@ -62,21 +71,19 @@ export const ServerSettingsModal = () => {
     }
   }, [server, form]);
 
-  const isLoading = form.formState.isSubmitting;
-
   return (
     <Dialog
       open={isModalOpen}
       onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
+      <DialogContent className="bg-white text-black p-6 overflow-hidden">
         <DialogHeader>
-          <DialogTitle className="text-lg font-bold">Server Settings</DialogTitle>
+          <DialogTitle className="text-lg font-bold">Change Server Settings</DialogTitle>
           <DialogDescription>{/* <p>Start a new server and invite your friends to join.</p> */}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 p-4">
+            className="space-y-8">
             <div className="flex items-center justify-center text-center">
               <FormField
                 control={form.control}
@@ -118,7 +125,7 @@ export const ServerSettingsModal = () => {
                 disabled={isLoading}
                 className="w-full"
                 variant="secondary">
-                Create Server
+                Update
               </Button>
             </DialogFooter>
           </form>

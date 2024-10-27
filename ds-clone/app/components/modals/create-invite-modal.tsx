@@ -11,8 +11,10 @@ import axios from "axios";
 import { Copy, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+
 export const CreateInviteModal = () => {
   const { isOpen, onClose, type, onOpen, data } = useModal();
+  const [isLoading, setIsLoading] = useState(false);
   const [inviteUrl, setInviteUrl] = useState("");
   const origin = useOrigin();
   const { server } = data;
@@ -45,10 +47,13 @@ export const CreateInviteModal = () => {
 
   const handleGenerateInvite = async () => {
     try {
-      const { data } = await axios.post(`/api/server/invite/${server?.id}/`);
+      setIsLoading(true);
+      const { data } = await axios.post(`/api/server/invite/${server?.id}/`, {});
       setInviteUrl(data.data.link);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,13 +61,13 @@ export const CreateInviteModal = () => {
     <Dialog
       open={isModalOpen}
       onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
+      <DialogContent className="bg-white text-black p-6 overflow-hidden">
         <DialogHeader>
-          <DialogTitle className="text-lg font-bold">Invite a member</DialogTitle>
-          <DialogDescription>Invite a member to your server by entering their email address.</DialogDescription>
+          <DialogTitle className="text-lg font-bold">Create Server Invite</DialogTitle>
+          <DialogDescription>Create an invite and bring your friends over to your server.</DialogDescription>
         </DialogHeader>
 
-        <div className="p-6">
+        <div className="">
           <Label className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">Server invite link</Label>
           <div className="flex items-center mt-2 gap-x-2">
             <Input
@@ -77,6 +82,8 @@ export const CreateInviteModal = () => {
             </Button>
           </div>
           <Button
+            disabled={isLoading}
+            isLoading={isLoading}
             onClick={handleGenerateInvite}
             variant="link"
             className="
