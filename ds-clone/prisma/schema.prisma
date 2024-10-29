@@ -86,11 +86,11 @@ model Message {
   seenAt DateTime? @db.Date
 
   conversationId String       @db.ObjectId
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   senderId  String   @db.ObjectId
-  sender    User     @relation(fields: [senderId], references: [id])
-  Channel   Channel? @relation(fields: [channelId], references: [id])
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  Channel   Channel? @relation(fields: [channelId], references: [id], onDelete: SetNull)
   channelId String?  @db.ObjectId
 }
 
@@ -111,7 +111,7 @@ model Server {
   // inviteCode String? @unique //removed for now because of the invite system
 
   userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   channels Channel[]
   members  Member[]
@@ -127,7 +127,7 @@ model Server {
 model ServerInvite {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
   serverId  String     @db.ObjectId
-  server    Server     @relation(fields: [serverId], references: [id])
+  server    Server     @relation(fields: [serverId], references: [id], onDelete: Cascade)
   inviteKey String     @unique
   expires   Expires    @default(NEVER)
   isEndless Boolean?   @default(false)
@@ -164,11 +164,11 @@ enum Expires {
 model ServerInviteUses {
   id        String       @id @default(auto()) @map("_id") @db.ObjectId
   serverId  String       @db.ObjectId
-  server    Server       @relation(fields: [serverId], references: [id])
+  server    Server       @relation(fields: [serverId], references: [id], onDelete: Cascade)
   inviteId  String       @db.ObjectId
-  invite    ServerInvite @relation(fields: [inviteId], references: [id])
+  invite    ServerInvite @relation(fields: [inviteId], references: [id], onDelete: Cascade)
   usedBy    String       @db.ObjectId
-  user      User         @relation(fields: [usedBy], references: [id])
+  user      User         @relation(fields: [usedBy], references: [id], onDelete: Cascade)
   usedAt    DateTime     @db.Date
   ipAddress String?
   userAgent String?
@@ -188,10 +188,10 @@ model Member {
   role MemberRole @default(GUEST)
 
   userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   serverId String @db.ObjectId
-  server   Server @relation(fields: [serverId], references: [id])
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -203,10 +203,10 @@ model Channel {
   type ChannelType @default(TEXT)
 
   userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   serverId String @db.ObjectId
-  server   Server @relation(fields: [serverId], references: [id])
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   messages Message[]
 

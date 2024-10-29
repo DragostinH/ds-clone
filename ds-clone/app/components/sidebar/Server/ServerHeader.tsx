@@ -64,6 +64,7 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
         )}
         {isModerator && (
           <DropdownMenuItem
+            onClick={() => onOpen("create-channel", { server })}
             className="rounded-sm flex items-center px-3 py-2 text-sm cursor-pointer 
             hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50
           ">
@@ -74,6 +75,7 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
         {isModerator && <DropdownMenuSeparator />}
         {isOwner && (
           <DropdownMenuItem
+            onClick={() => onOpen("delete-server", { server })}
             className="rounded-sm text-rose-500 flex items-center px-3 py-2 text-sm cursor-pointer 
             hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50
           ">
@@ -83,10 +85,11 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
         )}
         {!isOwner && (
           <DropdownMenuItem
+            onClick={() => onOpen("leave-server", { server })}
             className="rounded-sm text-rose-500 flex items-center px-3 py-2 text-sm cursor-pointer 
             hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50
           ">
-            Logout
+            Leave Server
             <LogOut className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
         )}

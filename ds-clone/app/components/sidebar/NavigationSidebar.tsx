@@ -12,16 +12,13 @@ import getServers from "@/actions/getServers";
 
 const NavigationSidebar = async () => {
   const session = await getAuthUser();
-  console.log(session);
-  
-
   if (!session) {
     redirect("/login");
   }
   const servers = await getServers();
 
   return (
-    <div className="space-y-4 flex flex-col items-center h-full text-primary-400 w-full dark:bg-[#1E1F22] py-3">
+    <div className="hidden md:flex space-y-4 flex-col items-center h-full text-primary-400 w-full dark:bg-[#1E1F22] py-3">
       <MessagesRouteLink />
       <Separator
         className="h-[1px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto"

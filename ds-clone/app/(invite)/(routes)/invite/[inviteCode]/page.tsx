@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import React from "react";
 import AcceptInviteBox from "../../components/AcceptInviteBox";
 import client from "@/app/libs/prismadb";
+import { Expires } from "@prisma/client";
 
 interface InviteCodePageProps {
   params: {
@@ -51,9 +52,9 @@ const InviteCodePage: React.FC<InviteCodePageProps> = async ({ params: { inviteC
     },
   });
 
-  if (serverInviteUses.length === maxUses) return redirect("/");
+  // if (serverInviteUses.length === maxUses) return redirect("/");
 
-  if (isEndless && compareAsc(expires, format(new Date(), "yyyy-MM-dd'T'HH:mm:ss")) === 1) {
+  if (isEndless && expires === Expires.NEVER) {
     return (
       <div className="h-full flex flex-col items-center justify-center">
         <AcceptInviteBox

@@ -11,14 +11,8 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Invalid Credentials", { status: 400 });
     }
 
-    // Verify that the password is being passed correctly
-    console.log("p------", password);
-
     // Hash the password asynchronously
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Check if hashedPassword is being generated
-    console.log("Hashed password: ", hashedPassword);
 
     const user = await prisma?.user.create({
       data: {

@@ -35,22 +35,22 @@ type FormValues = {
   name: string;
 };
 
-export const CreateChannelModal = () => {
+export const EditChannelModal = () => {
   const { isOpen, onClose, type, onOpen, data } = useModal();
   const { register, handleSubmit } = useForm<FormValues>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { channelType } = data;
+  const { channel } = data;
 
   const router = useRouter();
   const params = useParams();
-  const isModalOpen = isOpen && type === "create-channel";
+  const isModalOpen = isOpen && type === "edit-channel";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: channelType || ChannelType.TEXT,
+      type: channel?.type || ChannelType.TEXT,
     },
     mode: "onBlur",
   });
@@ -64,15 +64,15 @@ export const CreateChannelModal = () => {
     try {
       setIsLoading(true);
       const url = qs.stringifyUrl({
-        url: "/api/channel",
+        url: `/api/channel/${channel?.id}`,
         query: {
           serverId: params?.serverId,
         },
       });
-      const res = await axios.post(url, values);
+      const res = await axios.patch(url, values);
       form.reset();
       if (res.status === 200) {
-        toast.success(`Created new ${values.type} channel: ${values.name}`, {
+        toast.success(`Updated the ${values.type} channel: ${values.name}`, {
           icon: "🎉",
           duration: 5000,
         });
@@ -87,14 +87,11 @@ export const CreateChannelModal = () => {
   };
 
   useEffect(() => {
-    if (channelType) {
-      form.setValue("type", channelType);
-      console.log(channelType);
-      
-    } else {
-      form.setValue("type", ChannelType.TEXT);
+    if (channel) {
+      form.setValue("type", channel?.type);
+      form.setValue("name", channel?.name);
     }
-  }, [channelType, form]);
+  }, [channel, form, isOpen]);
 
   return (
     <Dialog
@@ -102,7 +99,9 @@ export const CreateChannelModal = () => {
       onOpenChange={handleClose}>
       <DialogContent className="bg-[#1E1F22] text-black p-4 overflow-hidden">
         <DialogHeader>
-          <DialogTitle className="text-primary-100 text-lg  text-center">Create a server channel</DialogTitle>
+          <DialogTitle className="text-primary-100 text-lg  text-center">
+            Edit the <span className="underline font-semibold text-primary-300">{channel?.name}</span> channel
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -166,7 +165,7 @@ export const CreateChannelModal = () => {
                 disabled={isLoading}
                 className="w-full"
                 variant="primary">
-                Create Channel
+                Update Channel
               </Button>
             </DialogFooter>
           </form>

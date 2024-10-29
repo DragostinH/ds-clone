@@ -6,7 +6,7 @@ interface ServerUserId {
   serverId: string;
 }
 
-export async function GET(req: NextRequest, params: ServerUserId) {
+export async function GET(req: NextRequest, { params }: { params: ServerUserId }) {
   try {
     const authUser = getAuthUser();
     if (!authUser) {
@@ -50,5 +50,55 @@ export async function PATCH(req: NextRequest, { params }: { params: ServerUserId
   } catch (error) {
     console.log("[SERVER_PATCH_ERROR]", error);
     return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest, { params }: { params: ServerUserId }) {
+  try {
+    const authUser = getAuthUser();
+    if (!authUser) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    if (!params.serverId) {
+      return new NextResponse("Server ID is missing", { status: 400 });
+    }
+
+    // Start a transaction
+    const deleteTransaction = await client?.$transaction([
+      client?.serverInviteUses.deleteMany({
+        where: {
+          serverId: params.serverId,
+        },
+      }),
+      client?.serverInvite.deleteMany({
+        where: {
+          serverId: params.serverId,
+        },
+      }),
+
+      client?.member.deleteMany({
+        where: {
+          serverId: params.serverId,
+        },
+      }),
+
+      client?.channel.deleteMany({
+        where: {
+          serverId: params.serverId,
+        },
+      }),
+
+      client?.server.delete({
+        where: {
+          id: params.serverId,
+        },
+      }),
+    ]);
+
+    return NextResponse.json({ message: `Server ${deleteTransaction[4].name} and all its relation data has been deleted.` });
+  } catch (error) {
+    console.log("[SERVER_DELETE_ERROR]", error);
+    return NextResponse.json("Internal Server Error", { status: 500 });
   }
 }

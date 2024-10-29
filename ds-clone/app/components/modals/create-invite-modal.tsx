@@ -42,7 +42,6 @@ export const CreateInviteModal = () => {
       id: "copy-invite-link",
     });
     navigator.clipboard.writeText(inviteUrl);
-    console.log("Copied to clipboard", inviteUrl);
   };
 
   const handleGenerateInvite = async () => {

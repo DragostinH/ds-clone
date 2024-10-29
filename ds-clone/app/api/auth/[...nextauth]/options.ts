@@ -49,10 +49,6 @@ export const options: NextAuthOptions = {
           where: { email: credentials.email },
         });
 
-        console.log("user", user);
-        
-
-
         if (!user || !user?.password) throw new Error("Invalid credentials");
 
         const isMatch = await bcrypt.compare(credentials?.password, user.password);

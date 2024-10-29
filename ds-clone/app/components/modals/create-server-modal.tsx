@@ -57,26 +57,9 @@ export const CreateServerModal = () => {
     onClose();
   };
 
-  // const onSubmit = async (values: z.infer<typeof formSchema>) => {
-  //   console.log(form.formState.errors);
-  //   console.log(values);
-  //   console.log("submitting");
-
-  //   // try {
-  //   //   await axios.post("/api/server", values);
-  //   //   form.reset();
-  //   //   router.refresh();
-  //   //   onClose();
-  //   // } catch (error) {
-  //   //   console.error(error);
-  //   // }
-  //   // console.log(values);
-  // };
   const onSubmit: SubmitHandler<FormValues> = async () => {
     const { imageUrl, name } = form.getValues();
     if (imageUrl === "") {
-      console.log("[IMAGE_URL]", imageUrl);
-
       toast.error("Please upload an image", {
         icon: "🖼️",
         id: "upload-server-image",
@@ -95,14 +78,26 @@ export const CreateServerModal = () => {
     if (typeof imageUrl === "string" && imageUrl.length > 0 && imageUrl.length <= 255) {
       try {
         setIsLoading(true);
-        await axios.post("/api/server", form.getValues());
-        form.reset();
-        router.refresh();
+        const res = await axios.post("/api/server", form.getValues());
+        if (res?.status === 200) {
+          toast.success(
+            <p>
+              Server <span className="text-primary-300 underline font-semibold cursor-pointer">{name}</span> created successfully!
+            </p>,
+            {
+              icon: "🎉",
+              duration: 5000,
+            }
+          );
+        }
         onClose();
+        router.push(`/servers/${res.data?.data.id}`);
       } catch (error) {
         console.error(error);
       } finally {
+        form.reset();
         setIsLoading(false);
+        router.refresh();
       }
     }
   };
@@ -170,16 +165,3 @@ export const CreateServerModal = () => {
     </Dialog>
   );
 };
-// <Dialog open={isOpen}>
-//   <DialogContent className="bg-white text-black p0 overflow-hidden">
-//     <DialogHeader>
-//       <DialogTitle>Create a server</DialogTitle>
-//       <DialogDescription>
-//         <p>Start a new server and invite your friends to join.</p>
-//       </DialogDescription>
-//     </DialogHeader>
-//     <Form {...form}>
-//       <form onSubmit={form.handleSubmit(onSubmit)}>
-//     </Form>
-//   </DialogContent>
-// </Dialog>
