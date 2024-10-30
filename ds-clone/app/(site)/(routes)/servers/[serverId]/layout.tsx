@@ -1,6 +1,9 @@
 import getAuthUser from "@/actions/getAuthUser";
+import ServerMembersSidebar from "@/app/components/chat/ServerMembersSidebar";
 import ChannelsSidebar from "@/app/components/sidebar/Server/ChannelsSidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { ObjectId } from "bson";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -14,12 +17,16 @@ const ServerIdLayout = async ({ children, params }: { children: ReactNode; param
     return redirect("/messages");
   }
 
+  const cookiesStore = await cookies();
+
+  const defaultOpen = cookiesStore.get("sidebar:state")?.value === "closed";
+
   return (
     <div className="h-full flex">
-      <aside className="md:relative border-r-[1px] border-primary-900 md:flex h-full w-60 flex-col inset-y-0">
+      <aside className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
         <ChannelsSidebar serverId={serverId} />
       </aside>
-      <main className="h-full">{children}</main>
+        <main className="h-full md:pl-60 w-full">{children}</main>
     </div>
   );
 };

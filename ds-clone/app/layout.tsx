@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/providers/theme.provider";
 import { cn } from "@/lib/utils";
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { EdgeStoreProvider } from "./libs/edgestore";
+import { SocketProvider } from "@/components/providers/socket-provider";
 
 export const metadata: Metadata = {
   title: "Discord Clone",
@@ -32,8 +33,10 @@ export default function RootLayout({
             storageKey="discord-theme">
             <AuthContext>
               <ToasterContext />
-              <ModalProvider />
-              {children}
+              <SocketProvider>
+                <ModalProvider />
+                {children}
+              </SocketProvider>
               <LayoutFooter />
             </AuthContext>
           </ThemeProvider>

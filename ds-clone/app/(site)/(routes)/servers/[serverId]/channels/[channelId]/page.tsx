@@ -1,5 +1,58 @@
-const ChannelIdPage = () => {
-  return <div className="">channel id page</div>;
+import getAuthUser from "@/actions/getAuthUser";
+import ChatHeader from "@/app/components/chat/ChatHeader";
+import ChatInput from "@/app/components/chat/ChatInput";
+import ServerMembersSidebar from "@/app/components/chat/ServerMembersSidebar";
+import SocketIndicator from "@/app/components/SocketIndicator";
+import client from "@/app/libs/prismadb";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { redirect } from "next/navigation";
+
+interface ChannelIdPageProps {
+  params: {
+    serverId: string;
+    channelId: string;
+  };
+}
+
+const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
+  const authUser = await getAuthUser();
+
+  if (!authUser) return redirect("/login");
+
+  const channel = await client?.channel.findUnique({
+    where: {
+      id: params.channelId,
+    },
+    include: {
+      server: {
+        include: {
+          members: true,
+        },
+      },
+    },
+  });
+
+  const member = await client?.member.findFirst({
+    where: {
+      serverId: params.serverId,
+      userId: authUser.id,
+    },
+  });
+
+  if (!channel || !member) return redirect(`/messages`);
+  return (
+    <div className="h-full flex flex-col bg-white dark:bg-[#313338]">
+      {/* <SocketIndicator /> */}
+      <ChatHeader channel={channel} />
+      <div className="flex-1">future messages</div>
+      <ChatInput
+        name={channel.name}
+        type="channel"
+        apiUrl="/api/socket/messages"
+        query={{ serverId: params.serverId, channelId: params.channelId }}
+      />
+    </div>
+  );
 };
 
 export default ChannelIdPage;
