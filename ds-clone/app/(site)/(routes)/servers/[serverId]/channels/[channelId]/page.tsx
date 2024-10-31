@@ -42,7 +42,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
   if (!channel || !member) return redirect(`/messages`);
   return (
     <div className="h-full flex flex-col bg-white dark:bg-[#313338]">
-      {/* <SocketIndicator /> */}
+      <SocketIndicator />
       <ChatHeader channel={channel} />
       <div className="flex-1">future messages</div>
       <ChatInput

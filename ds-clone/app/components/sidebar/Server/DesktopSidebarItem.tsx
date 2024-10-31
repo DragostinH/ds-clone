@@ -13,9 +13,14 @@ interface DesktopSidebarItemProps {
 }
 
 export const DesktopSidebarItem = ({ id, name, imageUrl }: DesktopSidebarItemProps) => {
-  const { serverId } = useParams();
+  const { serverId } = useParams() as { serverId: string };
+  const imageStyle = {
+    animation: ""
+  }
   const router = useRouter();
   const onClick = () => {
+    console.log("[IMAGE_URL]", imageUrl);
+
     router.push(`/servers/${id}`);
   };
 
@@ -35,6 +40,10 @@ export const DesktopSidebarItem = ({ id, name, imageUrl }: DesktopSidebarItemPro
             alt={`${name} server icon`}
             width={48}
             height={48}
+            unoptimized
+            // onLoad={(e) => {
+            //   console.log("[IMAGE_LOADED]", e.target.src);
+            // }}
           />
         </div>
       </button>

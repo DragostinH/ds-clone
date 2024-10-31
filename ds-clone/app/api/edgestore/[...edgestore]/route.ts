@@ -6,9 +6,11 @@ const es = initEdgeStore.create();
  */
 const edgeStoreRouter = es.router({
   publicFiles: es.fileBucket(),
+
 });
 const handler = createEdgeStoreNextHandler({
   router: edgeStoreRouter,
+  logLevel: 'debug',
 });
 export { handler as GET, handler as POST };
 /**

@@ -54,6 +54,9 @@ const FileUpload: FC<FileUploadProps> = ({ value, onChange }) => {
                   }
                 },
               });
+
+              console.log("[RES_IMAGE]", res);
+
               setUrl(res.url);
               onChange(res.url);
             }
