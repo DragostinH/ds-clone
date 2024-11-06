@@ -1,21 +1,22 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useSidebar } from "@/components/ui/sidebar";
 import { UsersRound } from "lucide-react";
 import ActionTooltip from "../ActionTooltip";
+import { useMemberSidebar } from "@/hooks/use-member-sidebar";
 
 const ServerMembersButton = () => {
-  // const { open, state, setOpen, toggleSidebar } = useSidebar();
+  const { open, setOpen } = useMemberSidebar();
   return (
     <ActionTooltip
-      label="Server Members"
+      label={open ? "Close Members" : "Open Members"}
       side="left">
       <Button
         className="p-2 rounded-full h-7 w-7"
-        // variant={open ? "secondary" : "outline"}
-        // onClick={toggleSidebar}
-        >
+        variant={open ? "default" : "secondary"}
+        onClick={() => {
+          setOpen(!open);
+        }}>
         <UsersRound className="h-5 w-5" />
       </Button>
     </ActionTooltip>

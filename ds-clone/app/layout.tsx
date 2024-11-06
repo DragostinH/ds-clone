@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { EdgeStoreProvider } from "./libs/edgestore";
 import { SocketProvider } from "@/components/providers/socket-provider";
+import { SidebarProvider } from "@/components/providers/member-sidebar-provider";
+import QueryProvider from "@/components/providers/query-provider";
 
 export const metadata: Metadata = {
   title: "Discord Clone",
@@ -34,10 +36,12 @@ export default function RootLayout({
             <AuthContext>
               <ToasterContext />
               <SocketProvider>
-                <ModalProvider />
-                {children}
+                <SidebarProvider>
+                  <ModalProvider />
+                  <QueryProvider>{children}</QueryProvider>
+                </SidebarProvider>
               </SocketProvider>
-              <LayoutFooter />
+              {/* <LayoutFooter /> */}
             </AuthContext>
           </ThemeProvider>
         </EdgeStoreProvider>

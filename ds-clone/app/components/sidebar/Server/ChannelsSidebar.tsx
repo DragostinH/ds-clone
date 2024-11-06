@@ -22,15 +22,6 @@ const iconMap = {
   [ChannelType.VIDEO]: <Video className="mr-2 h-4 w-4" />,
 };
 
-const roleIconMap = {
-  [MemberRole.OWNER]: "👑",
-  // ADMIN: "🛡️",
-  [MemberRole.MODERATOR]: "🛡️",
-  [MemberRole.GUEST]: "👤",
-  // BANNED: "🚫",
-  // KICKED: "🚫",
-};
-
 const ChannelsSidebar: React.FC<ChannelsSidebarProps> = async ({ serverId }) => {
   const authUser = await getAuthUser();
   if (!authUser) return redirect("/login");
@@ -60,7 +51,6 @@ const ChannelsSidebar: React.FC<ChannelsSidebarProps> = async ({ serverId }) => 
   const textChannels = server?.channels.filter((channel) => channel.type === ChannelType.TEXT);
   const voiceChannels = server?.channels.filter((channel) => channel.type === ChannelType.VOICE);
   const videoChannels = server?.channels.filter((channel) => channel.type === ChannelType.VIDEO);
-  const members = server?.members.filter((member) => member.userId !== authUser.id);
 
   const role = server?.members.find((member) => member.userId === authUser.id)?.role;
 
@@ -105,15 +95,16 @@ const ChannelsSidebar: React.FC<ChannelsSidebarProps> = async ({ serverId }) => 
                 })),
               },
 
-              {
-                label: "Members",
-                type: "member",
-                data: members?.map((member) => ({
-                  icon: roleIconMap[member.role],
-                  name: member.user.nickname,
-                  id: member.user.id,
-                })),
-              },
+              // Moved members to a separate part of the layout
+              // {
+              //   label: "Members",
+              //   type: "member",
+              //   data: members?.map((member) => ({
+              //     icon: roleIconMap[member.role],
+              //     name: member.user.nickname,
+              //     id: member.user.id,
+              //   })),
+              // },
             ]}
           />
         </div>

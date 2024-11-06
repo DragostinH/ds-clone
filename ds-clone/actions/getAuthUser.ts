@@ -12,7 +12,6 @@ const getAuthUser = async () => {
     
     if (!currentUser) throw new Error("User not found");
     
-    console.log(currentUser);
     return currentUser;
   } catch (error) {
     return null;

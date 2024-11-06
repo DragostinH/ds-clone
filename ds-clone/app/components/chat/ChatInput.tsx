@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  content: z.string().min(1),
+  body: z.string().min(1),
 });
 interface ChatInputProps {
   apiUrl: string;
@@ -24,7 +24,7 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      content: "",
+      body: "",
     },
   });
 
@@ -36,21 +36,21 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
         url: apiUrl,
         query,
       });
-
       await axios.post(url, value);
     } catch (error) {
       console.log("[ChatInput] error:", error);
-
       console.error(error);
+    } finally {
+      form.reset();
     }
   };
   return (
-    <div className="">
+    <div className="relative shrink-0">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
-            name="content"
+            name="body"
             render={({ field }) => (
               <FormItem>
                 <FormControl>

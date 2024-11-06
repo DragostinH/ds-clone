@@ -33,6 +33,10 @@ model User {
   accounts Account[]
   messages Message[]
 
+  channelMessages        ChannelMessage[]
+  seenChannelMessagesIds String[]         @db.ObjectId
+  seenChannelMessages    ChannelMessage[] @relation("Seen", fields: [seenChannelMessagesIds], references: [id])
+
   servers Server[]
   members Member[]
 
@@ -84,14 +88,13 @@ model Message {
 
   seenAt DateTime? @db.Date
 
-  conversationId String       @db.ObjectId
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String?       @db.ObjectId
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   senderId String @db.ObjectId
   sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
-  Channel   Channel? @relation(fields: [channelId], references: [id], onDelete: SetNull)
-  channelId String?  @db.ObjectId
+  deleted Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -193,6 +196,8 @@ model Member {
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  ChannelMessage ChannelMessage[]
+
   serverId String @db.ObjectId
   server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
@@ -211,7 +216,7 @@ model Channel {
   serverId String @db.ObjectId
   server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
-  messages Message[]
+  channelMessages ChannelMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -221,6 +226,31 @@ enum ChannelType {
   TEXT
   VOICE
   VIDEO
+}
+
+model ChannelMessage {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  body    String?
+  fileUrl String?
+
+  seenIds String[] @db.ObjectId
+  seenBy  User[]   @relation("Seen", fields: [seenIds], references: [id])
+
+  seenAt DateTime? @db.Date
+
+  memberId String @db.ObjectId
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  channelId String  @db.ObjectId
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  senderId String @db.ObjectId
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Session {

@@ -12,10 +12,11 @@ export type ModalType =
   | "delete-channel"
   | "edit-channel"
   | "edit-server"
-  | "server-settings";
+  | "server-settings"
+  | "delete-message";
 
 interface ModalData {
-  channel?: Channel
+  channel?: Channel;
   server?: Server;
   channelType?: ChannelType;
 }

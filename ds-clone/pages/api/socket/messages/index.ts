@@ -1,7 +1,8 @@
-import getAuthUser from "@/actions/getAuthUser";
+import { options } from "@/app/api/auth/[...nextauth]/options";
 import client from "@/app/libs/prismadb";
 import { NextApiResponseServerIo } from "@/types";
 import { NextApiRequest } from "next";
+import { getServerSession } from "next-auth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponseServerIo) {
   if (req.method !== "POST") {
@@ -9,15 +10,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
   }
 
   try {
-    const authUser = await getAuthUser();
-    const { content, fileUrl } = req.body;
+    const authUser = await getServerSession(req, res, options);
+    const { body, image } = req.body;
     const { serverId, channelId } = req.query;
     if (!authUser) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized", authUser });
     }
 
-    if (!content && !fileUrl) {
-      return res.status(400).json({ message: "Content and or file missing" });
+    if (!body && !image) {
+      return res.status(400).json({ message: "body and or file missing" });
     }
 
     if (!serverId || !channelId) {
@@ -29,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         id: serverId as string,
         members: {
           some: {
-            userId: authUser.id,
+            userId: authUser?.user?.id,
           },
         },
       },
@@ -54,13 +55,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
       return res.status(404).json({ message: "Channel not found" });
     }
 
-    const member = server.members.find((m) => m.userId === authUser.id);
+    const member = server.members.find((m) => m.userId === authUser?.user?.id);
 
     if (!member) {
       return res.status(404).json({ message: "Member not found" });
     }
 
-    
+    const message = await client?.message.create({
+      data: {
+        body,
+        image,
+        senderId: member.id,
+        sender: authUser?.user?.id,
+        seenAt: null,
+      },
+    });
   } catch (error) {
     console.log("[MESSAGES_POST_ERROR]", error);
     return res.status(500).json({ message: "Internal Server Error" });

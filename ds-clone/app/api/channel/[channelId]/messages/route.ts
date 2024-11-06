@@ -1,6 +1,6 @@
 import getAuthUser from "@/actions/getAuthUser";
 import client from "@/app/libs/prismadb";
-import { Message } from "@prisma/client";
+import { ChannelMessage } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const MESSAGE_BATCH = 10;
@@ -22,10 +22,10 @@ export async function GET(req: NextRequest) {
       return new NextResponse("Channel missing", { status: 400 });
     }
 
-    let messages: Message[] = [];
+    let channelMessages: ChannelMessage[] = [];
 
     if (cursor) {
-      messages = await client?.message.findMany({
+      channelMessages = await client?.channelMessage.findMany({
         take: limit ? parseInt(limit) : MESSAGE_BATCH,
         skip: 1,
         cursor: {
@@ -35,20 +35,28 @@ export async function GET(req: NextRequest) {
           channelId,
         },
         include: {
-          sender: true,
+          member: {
+            include: {
+              user: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
         },
       });
     } else {
-      messages = await client?.message.findMany({
+      channelMessages = await client?.channelMessage.findMany({
         take: limit ? parseInt(limit) : MESSAGE_BATCH,
         where: {
           channelId,
         },
         include: {
-          sender: true,
+          member: {
+            include: {
+              user: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
@@ -56,18 +64,18 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    let nextCursor = messages.length > 0 ? messages[messages.length - 1].id : null;
+    let nextCursor = channelMessages.length > 0 ? channelMessages[channelMessages.length - 1].id : null;
 
-    if (messages.length === MESSAGE_BATCH) {
-      nextCursor = messages[messages.length - 1].id;
+    if (channelMessages.length === MESSAGE_BATCH) {
+      nextCursor = channelMessages[channelMessages.length - 1].id;
     }
-
+    channelMessages;
     return NextResponse.json({
-      messages,
+      channelMessages,
       nextCursor,
     });
   } catch (error) {
-    console.log("[MESSAGES_GET_ERROR]", error);
+    console.log("[CHANNEL_MESSAGES_GET_ERROR]", error);
 
     return new NextResponse("Internal server error", { status: 500 });
   }
