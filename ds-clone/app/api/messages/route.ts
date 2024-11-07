@@ -31,9 +31,6 @@ export async function GET(req: NextRequest) {
         cursor: {
           id: cursor,
         },
-        where: {
-          channelId,
-        },
         include: {
           sender: true,
         },
@@ -44,9 +41,6 @@ export async function GET(req: NextRequest) {
     } else {
       messages = await client?.message.findMany({
         take: limit ? parseInt(limit) : MESSAGE_BATCH,
-        where: {
-          channelId,
-        },
         include: {
           sender: true,
         },

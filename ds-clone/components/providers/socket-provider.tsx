@@ -40,6 +40,8 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     setSocket(client);
 
     return () => {
+      client.off("connect");
+      client.off("disconnect");
       client.disconnect();
     };
   }, []);

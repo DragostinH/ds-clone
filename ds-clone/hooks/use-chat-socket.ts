@@ -16,43 +16,74 @@ export const useChatSocket = ({ addKey, queryKey, updateKey }: ChatSocketProps) 
   useEffect(() => {
     if (!socket) return;
 
-    // const handleNewMessage = (channelMessage: ChannelMessageWithMemberWithUser) => {
-    //   console.log("addKey received:", channelMessage);
+    // whenever you update a message, you use this socket event
+    socket.on(updateKey, (channelMessage: ChannelMessageWithMemberWithUser) => {
+      // add logic for updating the cache
+      queryClient.setQueryData<ChannelMessageWithMemberWithUser[]>([queryKey], (oldData: any) => {
+        if (!oldData || !oldData?.pages || oldData.pages.length === 0) return oldData
 
-    //   queryClient.setQueryData([queryKey], (oldData: any) => {
-    //     // If oldData or oldData.pages is missing, initialize it
-    //     if (!oldData || !oldData.pages) {
-    //       return {
-    //         pages: [
-    //           {
-    //             items: [channelMessage],
-    //           },
-    //         ],
-    //       };
-    //     }
+        const newData = oldData.pages.map((page: any) => {
+          return {
+            ...page,
+            items: page.items.map((item: ChannelMessageWithMemberWithUser) => {
+              if (item.id === channelMessage.id) {
+                return channelMessage
+              }
 
-    //     // Ensure that newData[0].items is an array
-    //     const newData = [...oldData.pages];
-    //     newData[0] = {
-    //       ...newData[0],
-    //       items: [channelMessage, ...(newData[0].items || [])],
-    //     };
+              return item
+            })
+          }
+        });
 
-    //     return {
-    //       ...oldData,
-    //       pages: newData,
-    //     };
-    //   });
-    // };
+        return {
+          ...oldData,
+          pages: newData
+        }
+      })
+    });
 
-    socket.on("hello", (channelMessage: ChannelMessageWithMemberWithUser) => {
-      // lets get testing with listening to emit("hello", message) from the server
-      console.log("addKey received:", channelMessage);
-      
+    // whenever you add a message, you use this socket event
+    socket.on(addKey, (channelMessage: ChannelMessageWithMemberWithUser) => {
+      console.log('[ADDING_NEW_MESSAGE]', channelMessage);
+
+      queryClient.setQueryData<ChannelMessageWithMemberWithUser[]>([queryKey], (oldData: any) => {
+        console.log('[OLD_DATA]', oldData);
+
+        if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+          console.log('[NO_OLD_DATA]', oldData);
+
+          return {
+            pages: [{
+              items: [channelMessage]
+            }]
+          }
+        }
+
+
+
+
+        const newData = [...oldData.pages];
+
+        console.log('[NEW_DATA]', newData);
+
+        newData[0] = {
+          ...newData[0],
+          items: [
+            channelMessage,
+            ...newData[0].items
+          ]
+        };
+
+        return {
+          ...oldData,
+          pages: newData
+        }
+      });
     });
 
     return () => {
-      socket.off(addKey, "off");
-    };
+      socket.off(addKey);
+      socket.off(updateKey);
+    }
   }, [queryClient, addKey, queryKey, socket, updateKey]);
 };

@@ -35,12 +35,12 @@ export default function RootLayout({
             storageKey="discord-theme">
             <AuthContext>
               <ToasterContext />
-              <SocketProvider>
-                <SidebarProvider>
-                  <ModalProvider />
+              <SidebarProvider>
+                <ModalProvider />
+                <SocketProvider>
                   <QueryProvider>{children}</QueryProvider>
-                </SidebarProvider>
-              </SocketProvider>
+                </SocketProvider>
+              </SidebarProvider>
               {/* <LayoutFooter /> */}
             </AuthContext>
           </ThemeProvider>

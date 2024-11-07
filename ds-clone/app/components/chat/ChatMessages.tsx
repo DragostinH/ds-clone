@@ -27,7 +27,7 @@ const ChatMessages = ({ name, member, chatId, apiUrl, socketUrl, socketQuery, pa
   const queryKey = `chat:${chatId}`;
   const addKey = `chat:channel:${chatId}:messages`;
   const updateKey = `chat:${chatId}:channel:messages:update`;
-  
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useChatQuery({
     queryKey,
     apiUrl,
@@ -59,7 +59,7 @@ const ChatMessages = ({ name, member, chatId, apiUrl, socketUrl, socketQuery, pa
       <div className="flex flex-col-reverse mt-auto">
         {data?.pages?.map((group, i) => (
           <Fragment key={i}>
-            {group.channelMessages.map((message: ChannelMessageWithMemberWithUser) => (
+            {group.items.channelMessages.map((message: ChannelMessageWithMemberWithUser) => (
               <ChatItem
                 key={message.id}
                 message={message}

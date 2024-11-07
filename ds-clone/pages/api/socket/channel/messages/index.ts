@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
 
     const channelKey = `chat:channel:${channel.id}:messages`;
 
-    res?.socket?.server?.io?.emit("hello", message);
+    res?.socket?.server?.io?.emit(channelKey, message);
 
     return res.status(200).json({ message: "Message sent", member, channelMessage: message });
   } catch (error) {

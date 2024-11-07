@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
     }
     channelMessages;
     return NextResponse.json({
-      channelMessages,
+      items: channelMessages,
       nextCursor,
     });
   } catch (error) {
