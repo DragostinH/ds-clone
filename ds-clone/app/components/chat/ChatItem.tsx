@@ -31,7 +31,7 @@ const ChatItem = ({ message, member, id, body, timestamp, fileUrl, imageUrl, cur
   const isOwner = currentMember.role === MemberRole.OWNER;
   const isModerator = currentMember.role === MemberRole.MODERATOR;
   const isMember = currentMember.role === MemberRole.GUEST;
-  const isOP = currentMember.id === member.id;
+  const isOP = currentMember?.id === member?.id;
   const canDeleteMessage = !deleted && (isOwner || isModerator || isOP);
   const canEditMessage = !deleted && isOP && !fileUrl;
   const isPdf = fileType === "pdf" && fileUrl;
@@ -49,9 +49,9 @@ const ChatItem = ({ message, member, id, body, timestamp, fileUrl, imageUrl, cur
         <div className="flex flex-col w-full">
           <div className="flex items-center gap-x-2">
             <div className="flex items-center">
-              <p className="font-semibold text-sm hover:underline cursor-pointer">{member.user.nickname}</p>
-              <ActionTooltip label={member.role}>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{roleIconMap[member.role]}</span>
+              <p className="font-semibold text-sm hover:underline cursor-pointer">{member?.user?.nickname}</p>
+              <ActionTooltip label={member?.role}>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{roleIconMap[member?.role]}</span>
               </ActionTooltip>
             </div>
             <span className="text-xs text-zinc-500 dark:text-zinc-400">{timestamp}</span>
