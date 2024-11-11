@@ -28,11 +28,15 @@ const formSchema = z.object({
     .max(255, {
       message: "File name should be less than 255 characters",
     }),
+  thumbnailUrl: z.string().min(1, {
+    message: "Server thumbnail is required",
+  }),
 });
 
 type FormValues = {
   name: string;
   imageUrl: string;
+  thumbnailUrl: string;
 };
 
 export const CreateServerModal = () => {
@@ -48,6 +52,7 @@ export const CreateServerModal = () => {
     defaultValues: {
       name: "",
       imageUrl: "",
+      thumbnailUrl: "",
     },
     mode: "onBlur",
   });
@@ -78,6 +83,8 @@ export const CreateServerModal = () => {
     if (typeof imageUrl === "string" && imageUrl.length > 0 && imageUrl.length <= 255) {
       try {
         setIsLoading(true);
+        form.setValue("thumbnailUrl", imageUrl.replace(".jpg", "-thumb.jpg"));
+
         const res = await axios.post("/api/server", form.getValues());
         if (res?.status === 200) {
           toast.success(

@@ -19,8 +19,6 @@ export const DesktopSidebarItem = ({ id, name, imageUrl }: DesktopSidebarItemPro
   }
   const router = useRouter();
   const onClick = () => {
-    console.log("[IMAGE_URL]", imageUrl);
-
     router.push(`/servers/${id}`);
   };
 

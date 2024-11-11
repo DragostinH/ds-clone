@@ -4,8 +4,6 @@ import { getSession } from "next-auth/react";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
-
-
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const session = await getToken({ req, secret: process.env.SECRET });
@@ -17,12 +15,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { name, imageUrl } = await req.json();
+    const { name, imageUrl, thumbnailUrl } = await req.json();
     const server = await prisma?.server.create({
       data: {
         userId: loggedUser.id,
         name,
         imageUrl,
+        thumbnailUrl,
         // inviteCode: uuidv4(),
         channels: {
           create: [
@@ -51,6 +50,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return NextResponse.json({ message: "Server created", data: server });
   } catch (error) {
     console.log("[SERVER_POST_ERROR]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return NextResponse.json({ message: "Server not created", error: error }, { status: 500 });
   }
 }

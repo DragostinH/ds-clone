@@ -72,6 +72,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         memberId: member.id,
         seenAt: null,
       },
+      include: {
+        member: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
 
     const channelKey = `chat:channel:${channel.id}:messages`;

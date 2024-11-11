@@ -1,11 +1,12 @@
-import { redirect } from "next/navigation";
 import getAuthUser from "@/actions/getAuthUser";
+import { redirect } from "next/navigation";
 
-const Home = async () => {
+const ServerHomePage = async () => {
   const authUser = await getAuthUser();
+
   if (!authUser) return redirect("/login");
 
   redirect("/messages");
 };
 
-export default Home;
+export default ServerHomePage;

@@ -1,7 +1,6 @@
 import getAuthUser from "@/actions/getAuthUser";
 import ServerMembersSidebar from "@/app/components/chat/ServerMembersSidebar";
 import ChannelsSidebar from "@/app/components/sidebar/Server/ChannelsSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { ObjectId } from "bson";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

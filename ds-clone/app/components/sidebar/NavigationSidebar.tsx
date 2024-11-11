@@ -32,7 +32,7 @@ const NavigationSidebar = async () => {
                 key={server.id}
                 id={server.id}
                 name={server.name}
-                imageUrl={server?.imageUrl as string}
+                imageUrl={server?.thumbnailUrl as string}
               />
             );
           })}

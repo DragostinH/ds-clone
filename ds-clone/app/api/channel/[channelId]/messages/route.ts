@@ -1,5 +1,6 @@
 import getAuthUser from "@/actions/getAuthUser";
 import client from "@/app/libs/prismadb";
+import { ChannelMessageWithMemberWithUser } from "@/types";
 import { ChannelMessage } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest) {
       return new NextResponse("Channel missing", { status: 400 });
     }
 
-    let channelMessages: ChannelMessage[] = [];
+    let channelMessages: ChannelMessageWithMemberWithUser[] = [];
 
     if (cursor) {
       channelMessages = await client?.channelMessage.findMany({

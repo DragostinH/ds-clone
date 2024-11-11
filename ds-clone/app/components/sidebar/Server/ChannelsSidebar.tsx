@@ -1,16 +1,19 @@
-import getAuthUser from "@/actions/getAuthUser";
-import getServerById from "@/actions/getServerById";
-import { ChannelType, MemberRole } from "@prisma/client";
-import { redirect } from "next/navigation";
 import React from "react";
-import ServerHeader from "./ServerHeader";
+
+import getAuthUser from "@/actions/getAuthUser";
+
+import { ChannelType, MemberRole } from "@prisma/client";
 import client from "@/app/libs/prismadb";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
+import { redirect } from "next/navigation";
+import ServerHeader from "./ServerHeader";
 import ServerSearch from "./ServerSearch";
-import { Hash, Mic, Video } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import ServerSection from "./ServerSection";
 import ServerChannel from "./ServerChannel";
+
+import { Hash, Mic, Video } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface ChannelsSidebarProps {
   serverId: string;

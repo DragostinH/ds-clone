@@ -45,7 +45,7 @@ const FileUpload: FC<FileUploadProps> = ({ value, onChange }) => {
             setFile(acceptedFiles[0]);
             const file = acceptedFiles[0];
             if (file) {
-              const res = await edgestore.publicFiles.upload({
+              const res = await edgestore.publicImages.upload({
                 file: file,
                 onProgressChange(progress) {
                   setProgress(progress);
@@ -76,30 +76,14 @@ const FileUpload: FC<FileUploadProps> = ({ value, onChange }) => {
           setFile(file);
         }}
       />
-      {/* <Button
-        type="button"
-        variant="primary"
-        onClick={async () => {
-          if (file) {
-            const res = await edgestore.publicFiles.upload({
-              file,
-              onProgressChange: (progress) => {
-                setProgress(progress);
-                if (progress === 100) {
-                  toast.success("Server Picture Uploaded");
-                }
-              },
-            });
-            onChange(res.url);
-            setUrl(res.url);
-          }
-        }}>
-        Upload
-      </Button> */}
-      <Progress
-        className={cn("mt-2 bg-primary-900 ", !progress && "hidden")}
-        value={progress}
-      />
+
+      <div className="">
+        <Progress
+          className={cn("mt-2 bg-primary-900 ", !progress && "hidden")}
+          value={progress}
+        />{" "}
+        <span className="text-sm text-primary-300">{progress} %</span>
+      </div>
     </div>
   );
 };
