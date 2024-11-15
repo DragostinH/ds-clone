@@ -44,7 +44,10 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
   return (
     <div className="h-full flex flex-col bg-white dark:bg-[#313338]">
       <SocketIndicator />
-      <ChatHeader channel={channel} />
+      <ChatHeader
+        channel={channel}
+        serverId={channel.server.id}
+      />
       <div className="chat_content flex flex-row flex-auto min-h-0 min-w-0 justify-stretch items-stretch">
         <main className="relative flex flex-col min-h-0 min-w-0 flex-auto">
           <ChatMessages

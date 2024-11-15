@@ -15,7 +15,9 @@ export const options: NextAuthOptions = {
   callbacks: {
     async session({ session, user, token }) {
       if (session && session.user) {
-        (session.user as { id: string }).id = token.sub;
+        if (token.sub) {
+          (session.user as { id: string }).id = token.sub;
+        }
       }
       return session;
     },
@@ -41,7 +43,6 @@ export const options: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
 
-
       async authorize(credentials) {
         if (!credentials || !credentials.email || !credentials.password) throw new Error("Missing credentials");
 
@@ -57,8 +58,12 @@ export const options: NextAuthOptions = {
           // console.log(await bcrypt.decode(credentials?.password, 10));
 
           throw new Error("Invalid credentials");
+        }
 
-        };
+        // TODO: Add user status for whenever you login
+
+        const statusKey = `status:${user.id}`;
+        
 
         return { id: user.id, nickName: user?.nickname, email: user.email, image: user.image };
       },

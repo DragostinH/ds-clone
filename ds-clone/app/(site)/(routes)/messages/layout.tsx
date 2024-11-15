@@ -12,7 +12,7 @@ export default async function MessageLayout({ children }: { children: ReactNode 
       <aside className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
         <UsersSidebar />
       </aside>
-      <main>{children}</main>
+      <main className="h-full md:pl-60 w-full">{children}</main>
     </div>
   );
 }

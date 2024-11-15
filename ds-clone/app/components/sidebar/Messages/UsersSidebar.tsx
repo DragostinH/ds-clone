@@ -50,10 +50,6 @@ const UsersSidebar = async () => {
           <ConversationList initialItems={conversations} />
         </div>
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
-
-        <div className="">
-          <UserList users={users ?? []} />
-        </div>
       </ScrollArea>
     </div>
   );

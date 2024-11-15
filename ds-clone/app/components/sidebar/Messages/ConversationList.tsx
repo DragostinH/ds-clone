@@ -8,7 +8,7 @@ interface ConversationListProps {
 }
 
 const ConversationList: FC<ConversationListProps> = ({ initialItems }) => {
-  return <div className="">list</div>;
+  return <div className="">Conversation list</div>;
 };
 
 export default ConversationList;
