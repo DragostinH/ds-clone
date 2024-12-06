@@ -1,7 +1,6 @@
 import getAuthUser from "@/actions/getAuthUser";
 import client from "@/app/libs/prismadb";
 import { ChannelMessageWithMemberWithUser } from "@/types";
-import { ChannelMessage } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const MESSAGE_BATCH = 10;
@@ -70,7 +69,6 @@ export async function GET(req: NextRequest) {
     if (channelMessages.length === MESSAGE_BATCH) {
       nextCursor = channelMessages[channelMessages.length - 1].id;
     }
-    channelMessages;
     return NextResponse.json({
       items: channelMessages,
       nextCursor,

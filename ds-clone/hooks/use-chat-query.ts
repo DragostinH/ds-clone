@@ -13,26 +13,54 @@ interface ChatQueryProps {
 
 export const useChatQuery = ({ queryKey, apiUrl, paramKey, paramValue }: ChatQueryProps) => {
   const { isConnected } = useSocket();
-
+  
   const fetchChannelMessages = async ({ pageParam = undefined }) => {
-    const url = qs.stringifyUrl(
-      {
-        url: apiUrl,
-        query: {
-          cursor: pageParam,
-          [paramKey]: paramValue,
+    try {
+      const url = qs.stringifyUrl(
+        {
+          url: apiUrl,
+          query: {
+            cursor: pageParam,
+            [paramKey]: paramValue,
+          },
         },
-      },
-      { skipNull: true }
-    );
+        { skipNull: true }
+      );
 
-    const res = await axios.get(url);
-    return res.data;
+      const res = await axios.get(url);
+      return res.data;
+    } catch (error: any) {
+      console.log("[ERROR_FETCH_CHANNEL_MESSAGES]", error);
+      throw new Error(error);
+    }
+  };
+
+  const fetchConversationMessages = async ({ pageParam = undefined }) => {
+    try {
+      const url = qs.stringifyUrl(
+        {
+          url: apiUrl,
+          query: {
+            cursor: pageParam,
+            [paramKey]: paramValue,
+          },
+        },
+        { skipNull: true }
+      );
+      console.log("[FETCH_CONVERSATION_MESSAGES_PAGE_PARAM]", pageParam);
+      console.log("[FETCH_CONVERSATION_MESSAGES]", url);
+
+      const res = await axios.get(url);
+      return res.data;
+    } catch (error: any) {
+      console.log("[ERROR_FETCH_CONVERSATION_MESSAGES]", error);
+      throw new Error(error);
+    }
   };
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
     queryKey: [queryKey],
-    queryFn: fetchChannelMessages,
+    queryFn: paramKey === "channelId" ? fetchChannelMessages : fetchConversationMessages,
     getNextPageParam: (lastPage) => lastPage?.nextCursor,
     refetchInterval: isConnected ? false : 1000,
     initialPageParam: undefined,

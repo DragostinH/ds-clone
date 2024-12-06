@@ -1,22 +1,23 @@
 import client from "@/app/libs/prismadb";
 import getSession from "./getSession";
 import getAuthUser from "./getAuthUser";
+import { UserWithConversations } from "@/types";
 
 const USERS_BATCH = 10;
 
-export default async function getUsers() {
+export default async function getUsersWithConversation() {
   try {
     const authUser = await getAuthUser();
     if (!authUser) return [];
-    
-    const users = await client?.user.findMany({
+
+    const users: UserWithConversations[] = await client?.user.findMany({
       take: USERS_BATCH,
       where: {
         NOT: {
           id: authUser.id,
         },
       },
-      include:{
+      include: {
         conversations: true,
       },
       orderBy: {

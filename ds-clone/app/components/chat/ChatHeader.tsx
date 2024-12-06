@@ -18,7 +18,7 @@ const ChatHeader = ({ channel, conversation, serverId, type, imageUrl }: ChatHea
     <div className="text-sm font-semibold px-3 flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2">
       <SocketIndicator />
 
-      <MobileToggle serverId={serverId} />
+      <MobileToggle serverId={serverId ?? ""} />
       {channel && (
         <div className="flex items-center justify-between w-full gap-2">
           <div className="flex items-center gap-2">

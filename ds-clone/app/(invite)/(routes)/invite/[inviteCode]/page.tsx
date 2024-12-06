@@ -61,7 +61,7 @@ const InviteCodePage: React.FC<InviteCodePageProps> = async ({ params: { inviteC
           serverId={serverId}
           serverName={name}
           serverMembers={members}
-          serverImage={imageUrl ?? ""}
+          image={imageUrl ?? ""}
           inviteId={serverInviteId}
         />
       </div>

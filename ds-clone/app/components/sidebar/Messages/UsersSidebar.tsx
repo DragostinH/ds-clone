@@ -9,15 +9,40 @@ import client from "@/app/libs/prismadb";
 import UserAvatar from "../../UserAvatar";
 import getConversations from "@/actions/getConversations";
 import ConversationList from "./ConversationList";
-import getUsers from "@/actions/getUsers";
+import getUsers from "@/actions/getUsersWithConversation";
 
 const USERS_BATCH = 10;
 
 const UsersSidebar = async () => {
   const authUser = await getAuthUser();
+  const apiUrl = `/api/conversation/list`;
+  const socketUrl = "";
+  const socketQuery = {};
   if (!authUser) return redirect("/login");
 
-  const conversations = await getConversations();
+  //getting all converations with messages where you are not the sender
+  const conversations = await client?.conversation.findMany({
+    where: {
+      users: {
+        some: {
+          id: authUser.id,
+        },
+      },
+    },
+    include: {
+      users: true,
+      messages: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          NOT: {
+            senderId: authUser.id,
+          },
+        },
+      },
+    },
+  });
   const users = await getUsers();
 
   return (
@@ -47,7 +72,15 @@ const UsersSidebar = async () => {
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
         {/* Users */}
         <div className="">
-          <ConversationList initialItems={conversations} />
+          <ConversationList
+            loggedInUser={authUser}
+            conversations={conversations}
+            apiUrl={apiUrl}
+            socketUrl={socketUrl}
+            socketQuery={socketQuery}
+            paramKey="conversationId"
+            paramValue=""
+          />
         </div>
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
       </ScrollArea>

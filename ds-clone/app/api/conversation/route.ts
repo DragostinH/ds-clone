@@ -1,4 +1,6 @@
-import { NextResponse } from "next/server";
+import getAuthUser from "@/actions/getAuthUser";
+import { NextApiRequest } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
@@ -9,49 +11,37 @@ export async function GET(req: Request) {
   }
 }
 
-// export async function POST(req: Request) {
-//     try {
-//         const { name } = await req.json();
-//         const channel = await client.channel.create({
-//             data: {
-//                 name,
-//             },
-//         });
-//         return NextResponse.json(channel);
-//     } catch (error) {
-//         return NextResponse.error();
-//     }
-// }
+export async function POST(req: NextRequest) {
+  try {
+    const authUser = await getAuthUser();
+    if (!authUser) return NextResponse.json("Unauthorized", { status: 401 });
 
-// export async function PUT(req: Request) {
-//     try {
-//         const { id, name } = await req.json();
-//         const channel = await client.channel.update({
-//             where: {
-//                 id,
-//             },
-//             data: {
-//                 name,
-//             },
-//         });
-//         return NextResponse.json(channel);
-//     } catch (error) {
-//         return NextResponse.error();
-//     }
-// }
+    const { userId } = await req.json();
+    console.log("[USER_ID]", userId);
 
-// export async function DELETE(req: Request) {
-//     try {
-//         const { id } = await req.json();
-//         await client.channel.delete({
-//             where: {
-//                 id,
-//             },
-//         });
-//         return NextResponse.json({ message: "Channel deleted" });
-//     } catch (error) {
-//         return NextResponse.error();
-//     }
-// }
 
-// get find if the user has a conversation with the logged in user
+    // check again if both users have a conversation together
+    const joinCoversation = await prisma?.conversation.findFirst({
+      where: {
+        userIds: {
+          hasEvery: [authUser.id, userId],
+        },
+      },
+    });
+
+    if (!joinCoversation) {
+      const newConversation = await prisma?.conversation.create({
+        data: {
+          users: {
+            connect: [{ id: authUser.id }, { id: userId }],
+          },
+        },
+      });
+
+      return NextResponse.json({ conversation: newConversation });
+    }
+  } catch (error) {
+    console.log("[ERROR_CREATE_CONVERSATION]", error);
+    return NextResponse.json(error, { status: 500 });
+  }
+}

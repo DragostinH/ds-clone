@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
   }
 
   try {
-    const authUser = await getServerSession(req, res, options);
+    const authUser = (await getServerSession(req, res, options)) as { user: { id: string; name?: string | null; email?: string | null; image?: string | null } };
     const { body, image } = req.body;
     const { conversationId } = req.query;
     if (!authUser) {
@@ -28,6 +28,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
       return res.status(400).json({ message: "conversationId missing" });
     }
 
+    const conversation = await client?.conversation.findFirst({
+      where: {
+        id: conversationId as string,
+      },
+    });
+
     const message = await client?.message.create({
       data: {
         body,
@@ -39,17 +45,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
             id: authUser?.user?.id,
           },
         },
-        conversationId: conversationId as string,
+        conversationId: conversation?.id,
+      },
+      include: {
+        sender: true,
       },
     });
 
-    const messageKey = `chat:${conversationId}:messages`;
+    const messageKey = `chat:conversation:${conversationId}:messages`;
 
     res?.socket?.server?.io?.emit(messageKey, message);
+    // emit logic to update the conversation list for the users in the conversation
 
     return res.status(200).json({ message: "Message sent", data: message });
   } catch (error) {
-    console.log("[MESSAGES_POST_ERROR]", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }

@@ -9,7 +9,7 @@ interface UserAvatarProps {
 
 const UserAvatar: FC<UserAvatarProps> = ({ src, alt, className }) => {
   return (
-    <Avatar>
+    <Avatar className={className}>
       <AvatarImage src={src} />
       <AvatarFallback>{alt?.charAt(0).toUpperCase()}</AvatarFallback>
     </Avatar>

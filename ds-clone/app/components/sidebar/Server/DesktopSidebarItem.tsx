@@ -39,9 +39,6 @@ export const DesktopSidebarItem = ({ id, name, imageUrl }: DesktopSidebarItemPro
             width={48}
             height={48}
             unoptimized
-            // onLoad={(e) => {
-            //   console.log("[IMAGE_LOADED]", e.target.src);
-            // }}
           />
         </div>
       </button>

@@ -80,7 +80,6 @@ model Conversation {
   name          String?
   isGroup       Boolean   @default(false)
 
-  messageIds String[]  @db.ObjectId
   messages   Message[]
 
   userIds String[] @db.ObjectId

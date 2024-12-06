@@ -29,6 +29,10 @@ const ChannelsSidebar: React.FC<ChannelsSidebarProps> = async ({ serverId }) => 
   const authUser = await getAuthUser();
   if (!authUser) return redirect("/login");
 
+  if (!serverId) return redirect("/messages");
+
+  console.log("[CHANNEL_SIDEBAR_SERVER_ID]", serverId);
+
   const server = await client?.server.findFirst({
     where: {
       id: serverId,
@@ -59,6 +63,7 @@ const ChannelsSidebar: React.FC<ChannelsSidebarProps> = async ({ serverId }) => 
 
   return (
     <div className="flex flex-col z-40 h-full text-primary w-full dark:bg-[#2b2d31] bg-[#f2f3f5]">
+      <p>SERVERID: {serverId}</p>
       <ServerHeader
         server={server}
         role={role}

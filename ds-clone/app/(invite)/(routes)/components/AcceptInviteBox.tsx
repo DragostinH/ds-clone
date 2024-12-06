@@ -13,11 +13,11 @@ interface AcceptInviteBoxProps {
   serverId: string;
   serverName: string;
   serverMembers: Member[];
-  serverImage: string;
+  image: string;
   inviteId: string;
 }
 
-const AcceptInviteBox: FC<AcceptInviteBoxProps> = ({ serverId, serverName, serverMembers, serverImage, inviteId }) => {
+const AcceptInviteBox: FC<AcceptInviteBoxProps> = ({ serverId, serverName, serverMembers, image, inviteId }) => {
   const router = useRouter();
   const acceptInvite = async () => {
     try {
@@ -32,7 +32,7 @@ const AcceptInviteBox: FC<AcceptInviteBoxProps> = ({ serverId, serverName, serve
     <Card className="bg-primary-900 border-0 w-96 flex flex-col items-center justify-center">
       <CardHeader className="items-center">
         <Image
-          src={ServerImage}
+          src={image ? image : ServerImage}
           alt={serverName}
           className="
             rounded-full
@@ -44,6 +44,8 @@ const AcceptInviteBox: FC<AcceptInviteBoxProps> = ({ serverId, serverName, serve
             bg-primary-800
             p-1
             "
+          width={96}
+          height={96}
         />
         <CardTitle>{serverName}</CardTitle>
         <CardDescription>Members: {serverMembers.length}</CardDescription>

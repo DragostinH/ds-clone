@@ -2,6 +2,9 @@
   "name": "ds-clone",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -70,12 +73,15 @@
     "uploadthing": "^7.2.0",
     "uuid": "^10.0.0",
     "zod": "^3.23.8",
-    "zustand": "^5.0.0"
+    "zustand": "^5.0.0",
+    "prisma": {
+      "seed": "ts-node ./prisma/seed.ts"
+    }
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^20",
+    "@types/node": "^20.17.8",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
@@ -84,6 +90,7 @@
     "postcss": "^8",
     "prisma": "^5.20.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
   }
 }

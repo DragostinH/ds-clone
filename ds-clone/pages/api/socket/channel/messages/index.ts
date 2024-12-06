@@ -87,7 +87,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
 
     return res.status(200).json({ message: "Message sent", member, channelMessage: message });
   } catch (error) {
-    console.log("[CHANNEL_MESSAGES_POST_ERROR]", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }
