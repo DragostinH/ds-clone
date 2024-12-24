@@ -6,9 +6,10 @@ import { useDirectChatSocket } from "@/hooks/use-direct-chat-socket";
 import ChatWelcome from "./ChatWelcome";
 import { Fragment } from "react";
 import ChatItem from "./ChatItem";
-import { Conversation, Message, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { ConversationWithMessagesWithUsers, MessageWithSender } from "@/types";
 import DirectChatItem from "./DirectChatItem";
+import { useSocket } from "@/components/providers/socket-provider";
 
 interface DirectChatMessagesProps {
   currentUser: User;
@@ -26,6 +27,8 @@ const DirectChatMessages = ({ currentUser, otherUser, conversationId, apiUrl, so
   const queryKey = `chat:${conversationId}`;
   const addKey = `chat:conversation:${conversationId}:messages`;
   const updateKey = `chat:conversation${conversationId}:messages:update`;
+  const { socket } = useSocket();
+
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useChatQuery({
     queryKey,
@@ -34,7 +37,7 @@ const DirectChatMessages = ({ currentUser, otherUser, conversationId, apiUrl, so
     paramValue,
   });
 
-  // useDirectChatSocket({ queryKey, addKey, updateKey });
+  useDirectChatSocket({ queryKey, addKey, updateKey });
 
   if (status === "pending")
     return (

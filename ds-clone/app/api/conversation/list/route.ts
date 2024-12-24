@@ -1,6 +1,6 @@
 import getAuthUser from "@/actions/getAuthUser";
 import client from "@/app/libs/prismadb";
-import { ConversationWithMessages, ConversationWithMessagesWithSender } from "@/types";
+import { ConversationWithMessages, ConversationWithUsersWithMessagesWithSender } from "@/types";
 import { Conversation } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { Message } from "postcss";
@@ -18,20 +18,13 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const cursor = searchParams.get("cursor");
     const limit = searchParams.get("limit");
 
-    let conversationList: ConversationWithMessagesWithSender[] = [];
-
-    const convListTest = await client?.conversation.findMany({
-      where: {
-        users: {
-          some: {
-            id: authUser.id,
-          },
-        },
-      },
-    });
+    let conversationList: ConversationWithUsersWithMessagesWithSender[] = [];
 
     if (cursor) {
       conversationList = await client?.conversation.findMany({
+        orderBy: {
+          lastMessageAt: "desc",
+        },
         take: limit ? parseInt(limit) : CONVERSATION_BATCH,
         cursor: {
           id: cursor,
@@ -59,10 +52,21 @@ export async function GET(req: NextRequest, res: NextResponse) {
               },
             },
           },
+          users: {
+            select: {
+              id: true,
+              nickname: true,
+              image: true,
+              status: true,
+            },
+          },
         },
       });
     } else {
       conversationList = await client?.conversation.findMany({
+        orderBy: {
+          lastMessageAt: "desc",
+        },
         take: limit ? parseInt(limit) : CONVERSATION_BATCH,
         where: {
           users: {
@@ -87,6 +91,14 @@ export async function GET(req: NextRequest, res: NextResponse) {
               },
             },
           },
+          users: {
+            select: {
+              id: true,
+              nickname: true,
+              image: true,
+              status: true,
+            },
+          },
         },
       });
     }
@@ -100,7 +112,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
     return NextResponse.json({
       items: conversationList,
       nextCursor,
-      test: convListTest,
     });
   } catch (error) {
     console.error("[GET_ALL_CONVERSATIONS_FOR_USER]", error);

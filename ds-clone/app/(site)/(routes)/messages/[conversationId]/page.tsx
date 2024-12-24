@@ -28,7 +28,6 @@ const PrivateMessage: FC<PrivateMessageProps> = async ({ params: { conversationI
     where: {
       id: conversationId,
     },
-
     include: {
       users: true,
       messages: true,
@@ -60,7 +59,7 @@ const PrivateMessage: FC<PrivateMessageProps> = async ({ params: { conversationI
             type="conversation"
           />
           <ChatInput
-            name={`${conversation.users[1].nickname}`}
+            name={`${otherUser.nickname}`}
             type="conversation"
             apiUrl={chatInputApiUrl}
             query={{ conversationId: conversation.id }}

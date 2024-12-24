@@ -40,15 +40,16 @@ export type ConversationWithMessagesWithUsers = Conversation & {
   users: User[];
 };
 
-export type ConversationWithMessagesWithSender = Conversation & {
+export type ConversationWithUsersWithMessagesWithSender = Conversation & {
   messages: (Message & { sender: Sender })[];
+  users: Sender[];
 };
 export type ConversationWithMessages = Conversation & {
   messages: Message[];
 };
 
 export type MessageWithSender = Message & {
-  sender: User;
+  sender: Sender;
 };
 
 export type MessageWithConversationWithSender = Message & {

@@ -46,7 +46,6 @@ export const useChatSocket = ({ addKey, queryKey, updateKey }: ChatSocketProps) 
     socket.on(addKey, (channelMessage: ChannelMessageWithMemberWithUser) => {
 
       queryClient.setQueryData<ChannelMessageWithMemberWithUser[]>([queryKey], (oldData: any) => {
-
         if (!oldData || !oldData.pages || oldData.pages.length === 0) {
 
           return {

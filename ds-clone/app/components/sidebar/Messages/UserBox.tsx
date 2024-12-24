@@ -1,57 +1,76 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import UserAvatar from "../../UserAvatar";
 import { cn } from "@/lib/utils";
 import getAuthUser from "@/actions/getAuthUser";
 import { redirect, useRouter } from "next/navigation";
 import axios from "axios";
 import { Conversation, User } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useSocket } from "@/components/providers/socket-provider";
+import { useConversationListSocket } from "@/hooks/use-conversation-list-socket";
 
 interface UserBoxProps {
   src: string;
   name: string;
   id: string;
-  conversations: Conversation[];
+  conversationsIds: string[];
   loggedInUser: User;
 }
 
-const UserBox: FC<UserBoxProps> = ({ src, name, id, conversations, loggedInUser }) => {
+const fetchConversationTogether = async (otherUserId: string) => {
+  try {
+    const result = await axios.get(`/api/conversation/together/${otherUserId}`);
+    return result.data;
+  } catch (error) {
+    console.error("[FETCH_CONVERSATION_TOGETHER]", error);
+  }
+};
+
+const UserBox: FC<UserBoxProps> = ({ src, name, id, conversationsIds, loggedInUser }) => {
+  const [conversationTogether, setConversationTogether] = useState<string | null>(null);
+  const { joinConversation } = useConversationListSocket({
+    queryKey: "conversations",
+    updateKey: "chat:conversation-list:update",
+    loggedInUser,
+  });
   const router = useRouter();
-  const handleOnClick = async () => {
-    try {
-      // find conversation where the clicked user is in and the logged in user is in
-      const conversationTogether = loggedInUser.conversationIds.find((conversationId) => {
-        return conversations.find((conversation) => {
-          return conversation.id === conversationId;
+  const { socket } = useSocket();
+
+  useEffect(() => {
+    const fetchConversation = async () => {
+      if (!conversationsIds || conversationsIds === undefined) return;
+      // find out if the conversationIds can be found in the loggedInUser.conversationIds
+      const conversation = await fetchConversationTogether(id);
+      setConversationTogether(conversation?.conversationId);
+    };
+    fetchConversation();
+  }, [loggedInUser, conversationsIds]);
+
+  const handleOpenConversation = async () => {
+    if (!conversationTogether) {
+      try {
+        const { data } = await axios.post("/api/conversation", { userId: id });
+        // emit to the server that a new conversation has been created
+        data.conversation.userIds.forEach((userId: string) => {
+          socket?.emit("join-conversation", { conversationId: data.conversation.id, userId });
         });
-      });
+        console.log("[NEW_CONVERSATION]", data.conversation.id);
 
-      if (!conversationTogether || conversationTogether === undefined) {
-        // create a new conversation with both users
-        try {
-          const res = await axios.post(`/api/conversation`, {
-            userId: id,
-          });
-
-          router.push(`/messages/${res.data.conversation.id}`);
-        } catch (error) {
-          console.error(error);
-          console.log("[ERROR_CREATE_CONVERSATION]", error);
-        }
+        socket?.emit("new-conversation", { conversationId: data.conversation.id, userId: id });
+        router.push(`/messages/${data.conversation.id}`);
+      } catch (error) {
+        console.log("[ERROR_CREATE_CONVERSATION]", error);
       }
-
-      // redirect to the conversation if found
+    } else {
+      joinConversation(conversationTogether);
       router.push(`/messages/${conversationTogether}`);
-    } catch (error) {
-      console.error(error);
-      console.log("[ERROR_FETCH_CONVERSATION]", error);
     }
   };
-
   return (
     <button
-      onClick={handleOnClick}
+      onClick={handleOpenConversation}
       className="">
       <div className={cn("flex items-center p-2 rounded-md cursor-pointer hover:bg-zinc-700/30")}>
         <UserAvatar

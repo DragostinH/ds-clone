@@ -36,8 +36,8 @@ export default function RootLayout({
             <AuthContext>
               <ToasterContext />
               <SidebarProvider>
-                <ModalProvider />
                 <SocketProvider>
+                  <ModalProvider />
                   <QueryProvider>{children}</QueryProvider>
                 </SocketProvider>
               </SidebarProvider>

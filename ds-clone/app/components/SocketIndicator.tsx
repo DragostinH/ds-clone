@@ -18,7 +18,7 @@ const SocketIndicator = () => {
       <Badge
         className="bg-emerald-600"
         color="outline">
-        Live
+        Live: <span>Transport: {socket.transport}</span>
       </Badge>
     </div>
   );

@@ -10,6 +10,7 @@ import UserAvatar from "../../UserAvatar";
 import getConversations from "@/actions/getConversations";
 import ConversationList from "./ConversationList";
 import getUsers from "@/actions/getUsersWithConversation";
+import LoggedUserBox from "../Base/LoggedUserBox";
 
 const USERS_BATCH = 10;
 
@@ -20,29 +21,6 @@ const UsersSidebar = async () => {
   const socketQuery = {};
   if (!authUser) return redirect("/login");
 
-  //getting all converations with messages where you are not the sender
-  const conversations = await client?.conversation.findMany({
-    where: {
-      users: {
-        some: {
-          id: authUser.id,
-        },
-      },
-    },
-    include: {
-      users: true,
-      messages: {
-        orderBy: {
-          createdAt: "desc",
-        },
-        where: {
-          NOT: {
-            senderId: authUser.id,
-          },
-        },
-      },
-    },
-  });
   const users = await getUsers();
 
   return (
@@ -74,7 +52,6 @@ const UsersSidebar = async () => {
         <div className="">
           <ConversationList
             loggedInUser={authUser}
-            conversations={conversations}
             apiUrl={apiUrl}
             socketUrl={socketUrl}
             socketQuery={socketQuery}
@@ -84,6 +61,7 @@ const UsersSidebar = async () => {
         </div>
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
       </ScrollArea>
+      <LoggedUserBox />
     </div>
   );
 };

@@ -50,16 +50,11 @@ export const options: NextAuthOptions = {
           where: { email: credentials.email },
         });
 
-        console.log("[AUTHORIZE]", user);
-
         if (!user || !user?.password) throw new Error("Invalid credentials");
 
         const isMatch = await bcrypt.compare(credentials?.password, user.password);
 
         if (!isMatch) {
-          // console.log(await bcrypt.decode(credentials?.password, 10));
-          console.log("[PASSWORD_CHECK]", credentials, user.password);
-
           throw new Error("Invalid credentials");
         }
 

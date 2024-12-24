@@ -17,29 +17,15 @@ export async function POST(req: NextRequest) {
     if (!authUser) return NextResponse.json("Unauthorized", { status: 401 });
 
     const { userId } = await req.json();
-    console.log("[USER_ID]", userId);
 
-
-    // check again if both users have a conversation together
-    const joinCoversation = await prisma?.conversation.findFirst({
-      where: {
-        userIds: {
-          hasEvery: [authUser.id, userId],
+    const conversation = await prisma?.conversation.create({
+      data: {
+        users: {
+          connect: [{ id: authUser.id }, { id: userId }],
         },
       },
     });
-
-    if (!joinCoversation) {
-      const newConversation = await prisma?.conversation.create({
-        data: {
-          users: {
-            connect: [{ id: authUser.id }, { id: userId }],
-          },
-        },
-      });
-
-      return NextResponse.json({ conversation: newConversation });
-    }
+    return NextResponse.json({ conversation });
   } catch (error) {
     console.log("[ERROR_CREATE_CONVERSATION]", error);
     return NextResponse.json(error, { status: 500 });

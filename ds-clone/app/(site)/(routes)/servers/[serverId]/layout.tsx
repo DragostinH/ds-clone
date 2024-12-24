@@ -11,9 +11,6 @@ const ServerIdLayout = async ({ children, params }: { children: ReactNode; param
   if (!authUser) return redirect("/login");
   const { serverId } = params;
 
-  console.log("[SERVER_ID_LAYOUT]", serverId);
-  
-
   if (!ObjectId.isValid(serverId)) {
     console.log("Invalid server ID");
     return redirect("/messages");

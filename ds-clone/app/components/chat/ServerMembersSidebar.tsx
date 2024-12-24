@@ -35,7 +35,6 @@ const ServerMembersSidebar = () => {
   useEffect(() => {
     // Compare current serverId with the previous one
     if (prevServerIdRef.current !== serverId) {
-      console.log("[IS OPEN]", serverId);
       fetchServerMembers();
 
       // Update ref to the current serverId for the next render

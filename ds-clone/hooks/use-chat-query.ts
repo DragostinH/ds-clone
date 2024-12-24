@@ -47,9 +47,6 @@ export const useChatQuery = ({ queryKey, apiUrl, paramKey, paramValue }: ChatQue
         },
         { skipNull: true }
       );
-      console.log("[FETCH_CONVERSATION_MESSAGES_PAGE_PARAM]", pageParam);
-      console.log("[FETCH_CONVERSATION_MESSAGES]", url);
-
       const res = await axios.get(url);
       return res.data;
     } catch (error: any) {
