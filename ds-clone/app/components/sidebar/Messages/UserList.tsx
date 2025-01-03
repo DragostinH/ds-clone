@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { useUsersListQuery } from "@/hooks/use-users-list-query";
 import { useUserListSocket } from "@/hooks/use-user-list-socket";
 import { UIEvent, useEffect, useRef } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 // interface UserListProps {
 //   users: UserWithConversations[];
@@ -53,7 +52,7 @@ const UserList = () => {
       className="flex flex-col h-full overflow-y-auto"
       onScroll={handleScroll}>
       {data?.pages.map((page) =>
-        page.items.map((user) => (
+        page.items.map((user: User) => (
           <UserBox
             key={user.id}
             src={user.image ?? ""}

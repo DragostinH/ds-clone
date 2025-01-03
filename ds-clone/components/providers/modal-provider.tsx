@@ -9,6 +9,7 @@ import { EditChannelModal } from "@/app/components/modals/edit-channel-modal";
 import { LeaverServerModal } from "@/app/components/modals/leaver-server-modal";
 import ManageMembersModal from "@/app/components/modals/manage-members-modal";
 import { ServerSettingsModal } from "@/app/components/modals/server-settings-modal";
+import ViewAccountDetailsModal from "@/app/components/modals/view-account-details-modal";
 import { useEffect, useState } from "react";
 
 export const ModalProvider = () => {
@@ -31,6 +32,7 @@ export const ModalProvider = () => {
       <DeleteServerModal />
       <DeleteChannelModal />
       <EditChannelModal />
+      <ViewAccountDetailsModal />
     </>
   );
 };

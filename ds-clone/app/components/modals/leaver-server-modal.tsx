@@ -1,24 +1,21 @@
 "use client";
-import * as z from "zod";
-import qs from "query-string";
 import { Button } from "@/components/ui/button";
 
 import { useModal } from "@/app/hooks/useModalStore";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import { redirect, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { ArrowDownLeftSquare, ArrowLeftSquare } from "lucide-react";
+import { ArrowLeftSquare } from "lucide-react";
 
 export const LeaverServerModal = () => {
-  const { isOpen, onClose, type, onOpen, data } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
   const [isLoading, setIsLoading] = useState(false);
 
   const { server } = data;
   const router = useRouter();
-  const params = useParams();
   const isModalOpen = isOpen && type === "leave-server";
 
   const handleLeaveServer = async () => {
