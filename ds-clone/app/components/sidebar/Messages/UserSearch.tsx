@@ -37,6 +37,7 @@ const UserSearch: FC<UserSearchProps> = ({ data }) => {
   };
 
   const handleOpenChatWithUser = (id: any) => {
+    // TODO: Finish opening a chat with the user by clicking on the user
     console.log("Clicked on user", id);
   };
   return (

@@ -55,3 +55,11 @@ export type MessageWithSender = Message & {
 export type MessageWithConversationWithSender = Message & {
   conversation: Conversation & { users: User[] };
 };
+
+export type UserTypeForLogin = {
+  id: string;
+  email: string;
+  image: string | null;
+  nickname: string;
+  status: string;
+};

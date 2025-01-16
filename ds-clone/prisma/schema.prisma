@@ -76,7 +76,6 @@ model Account {
 model Conversation {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   createdAt     DateTime  @default(now())
-  // last message is the last message sent in the conversation
   lastMessageAt DateTime? @updatedAt
   name          String?
   isGroup       Boolean   @default(false)

@@ -51,6 +51,17 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
         console.log(`User ${userId} left room ${conversationRoom}`);
       });
 
+      socket.on("message-seen", (message) => {});
+
+      socket.on("first-message", ({ conversationId, userId }) => {
+        console.log("first-message", conversationId, userId);
+        const conversationRoom = `conversation:${conversationId}`;
+        socket.join(conversationRoom);
+
+        socket.to(conversationRoom).emit("user-joined", { conversationId, userId });
+        console.log(`User ${userId} joined room ${conversationRoom}`);
+      });
+
       socket.on("disconnect", () => {
         console.log("Client disconnected", socket.id);
       });

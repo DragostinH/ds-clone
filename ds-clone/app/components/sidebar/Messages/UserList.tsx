@@ -5,7 +5,10 @@ import UserBox from "./UserBox";
 import { useSession } from "next-auth/react";
 import { useUsersListQuery } from "@/hooks/use-users-list-query";
 import { useUserListSocket } from "@/hooks/use-user-list-socket";
-import { UIEvent, useEffect, useRef } from "react";
+import { UIEvent, useEffect, useRef, useState } from "react";
+import UserSearchBar from "./UserSearchBar";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // interface UserListProps {
 //   users: UserWithConversations[];
@@ -13,6 +16,7 @@ import { UIEvent, useEffect, useRef } from "react";
 
 const UserList = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const { data: session, status } = useSession();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status: queryStatus } = useUsersListQuery();
@@ -46,24 +50,32 @@ const UserList = () => {
   if (queryStatus === "error") return <div className="flex-1 flex items-center justify-center">Error...</div>;
   if (data?.pages[0].items.length === 0) return <div>No other users on the platform 😢</div>;
 
+  const filteredUsers = data?.pages?.flatMap((page) => page.items.filter((user: User) => user.nickname.toLowerCase().includes(searchQuery.toLowerCase())));
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col h-full overflow-y-auto"
-      onScroll={handleScroll}>
-      {data?.pages.map((page) =>
-        page.items.map((user: User) => (
-          <UserBox
+    <div className="flex flex-col h-full">
+      <UserSearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+      <ScrollArea
+        ref={containerRef}
+        className="flex flex-col h-full px-6 py-4 pt-2 overflow-y-auto"
+        onScroll={handleScroll}>
+        {filteredUsers?.map((user: User) => (
+          <div
             key={user.id}
-            src={user.image ?? ""}
-            name={user.nickname}
-            id={user.id}
-            conversationsIds={user?.conversationIds}
-            loggedInUser={session?.user as User}
-          />
-        ))
-      )}
-      {isFetchingNextPage && <div>Loading more...</div>}
+            className="">
+            <UserBox
+              src={user.image ?? ""}
+              name={user.nickname}
+              id={user.id}
+              conversationsIds={user?.conversationIds}
+              loggedInUser={session?.user as User}
+            />
+          </div>
+        ))}
+        {isFetchingNextPage && <div>Loading more...</div>}
+      </ScrollArea>
     </div>
   );
 };

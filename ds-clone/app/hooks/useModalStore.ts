@@ -1,3 +1,4 @@
+import { UserTypeForLogin } from "@/types";
 import { Channel, ChannelType, Server, User } from "@prisma/client";
 import { create } from "zustand";
 
@@ -21,6 +22,7 @@ interface ModalData {
   server?: Server;
   channelType?: ChannelType;
   user?: User;
+  loggedUser?: UserTypeForLogin;
 }
 
 interface ModalStore {

@@ -49,7 +49,10 @@ export const useConversationListSocket = ({ queryKey, updateKey, loggedInUser }:
             });
 
             //connect the other user to the conversation
-            joinConversation(updatedConversation.id, updatedConversation.userIds.find((userId: string) => userId !== loggedInUser.id));
+            joinConversation(
+              updatedConversation.id,
+              updatedConversation.userIds.find((userId: string) => userId !== loggedInUser.id)
+            );
           } else {
             console.log("[CONVERSATION_FOUND_UPDATING]", oldData);
             newData = oldData.pages.map((page: any) => {
@@ -84,6 +87,11 @@ export const useConversationListSocket = ({ queryKey, updateKey, loggedInUser }:
 
     socket.on("message-seen", (message: MessageWithSender) => {
       console.log("[message-seen]", message);
+    });
+
+    socket.on("first-message", ({ conversationId, userId }: { conversationId: string; userId: string }) => {
+      console.log("[first-message]", conversationId, userId);
+      // joinConversation(conversationId, userId);
     });
 
     return () => {

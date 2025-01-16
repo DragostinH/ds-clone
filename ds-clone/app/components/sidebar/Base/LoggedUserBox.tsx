@@ -9,11 +9,12 @@ import axios from "axios";
 import ActionTooltip from "../../ActionTooltip";
 import { Settings2Icon } from "lucide-react";
 import { useModal } from "@/app/hooks/useModalStore";
+import { UserTypeForLogin } from "@/types";
 
 const LoggedUserBox = () => {
   const { onOpen } = useModal();
   const { data, status } = useSession();
-  const [loggedUser, setLoggedUser] = useState<User>();
+  const [loggedUser, setLoggedUser] = useState<UserTypeForLogin>();
 
   useEffect(() => {
     const fetchLoggedUser = async (id: string) => {
@@ -67,7 +68,7 @@ const LoggedUserBox = () => {
         ">
           <ActionTooltip label="View Account">
             <button
-              onClick={() => onOpen("view-account", { user: loggedUser })}
+              onClick={() => onOpen("view-account", { loggedUser: loggedUser })}
               className="flex w-full justify-between items-center gap-1 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition">
               View Account
               <Settings2Icon

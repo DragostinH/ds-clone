@@ -1,4 +1,5 @@
 import getAuthUser from "@/actions/getAuthUser";
+import client from "@/app/libs/prismadb";
 import { NextApiRequest } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -18,11 +19,12 @@ export async function POST(req: NextRequest) {
 
     const { userId } = await req.json();
 
-    const conversation = await prisma?.conversation.create({
+    const conversation = await client?.conversation.create({
       data: {
         users: {
           connect: [{ id: authUser.id }, { id: userId }],
         },
+        createdAt: new Date(),
       },
     });
     return NextResponse.json({ conversation });
