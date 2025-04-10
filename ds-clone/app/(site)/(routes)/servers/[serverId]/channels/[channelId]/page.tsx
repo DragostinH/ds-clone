@@ -43,7 +43,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
   if (!channel || !member) return redirect(`/messages`);
   return (
     <div className="h-full flex flex-col bg-white dark:bg-[#313338]">
-      <SocketIndicator />
+      {/* <SocketIndicator /> */}
       <ChatHeader
         channel={channel}
         serverId={channel.server.id}
@@ -68,7 +68,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
             query={{ serverId: params.serverId, channelId: params.channelId }}
           />
         </main>
-        <ServerMembersSidebar members={channel.server.members} />
+        <ServerMembersSidebar />
       </div>
     </div>
   );
