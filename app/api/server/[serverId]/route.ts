@@ -6,7 +6,8 @@ interface ServerUserId {
   serverId: string;
 }
 
-export async function GET(req: NextRequest, { params }: { params: ServerUserId }) {
+export async function GET(req: NextRequest, props: { params: Promise<ServerUserId> }) {
+  const params = await props.params;
   try {
     const authUser = getAuthUser();
     if (!authUser) {
@@ -29,7 +30,8 @@ export async function GET(req: NextRequest, { params }: { params: ServerUserId }
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: ServerUserId }) {
+export async function PATCH(req: NextRequest, props: { params: Promise<ServerUserId> }) {
+  const params = await props.params;
   try {
     const authUser = getAuthUser();
     if (!authUser) {
@@ -53,7 +55,8 @@ export async function PATCH(req: NextRequest, { params }: { params: ServerUserId
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: ServerUserId }) {
+export async function DELETE(req: NextRequest, props: { params: Promise<ServerUserId> }) {
+  const params = await props.params;
   try {
     const authUser = getAuthUser();
     if (!authUser) {

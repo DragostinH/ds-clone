@@ -6,7 +6,8 @@ interface ServerUserId {
   serverId: string;
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: ServerUserId }) {
+export async function PATCH(req: NextRequest, props: { params: Promise<ServerUserId> }) {
+  const params = await props.params;
   try {
     const authUser = await getAuthUser();
 

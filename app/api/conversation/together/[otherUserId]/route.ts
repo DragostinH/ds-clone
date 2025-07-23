@@ -2,7 +2,8 @@ import getAuthUser from "@/actions/getAuthUser";
 import client from "@/app/libs/prismadb";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, { params }: { params: { otherUserId: string } }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ otherUserId: string }> }) {
+  const params = await props.params;
   try {
     const authUser = await getAuthUser();
     if (!authUser) {

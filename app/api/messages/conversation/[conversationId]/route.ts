@@ -9,7 +9,8 @@ interface ConversationId {
   conversationId: string;
 }
 
-export async function GET(req: NextRequest, { params }: { params: ConversationId }) {
+export async function GET(req: NextRequest, props: { params: Promise<ConversationId> }) {
+  const params = await props.params;
   try {
     const authUser = await getAuthUser();
     const { searchParams } = new URL(req.url);

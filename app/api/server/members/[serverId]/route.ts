@@ -6,7 +6,8 @@ interface ServerId {
   serverId: string;
 }
 
-export async function GET(req: NextRequest, { params }: { params: ServerId }) {
+export async function GET(req: NextRequest, props: { params: Promise<ServerId> }) {
+  const params = await props.params;
   try {
     const authUser = await getAuthUser();
 

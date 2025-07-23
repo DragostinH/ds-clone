@@ -9,7 +9,13 @@ interface ServerIdPageProps {
   };
 }
 
-const ServerIdPage: FC<ServerIdPageProps> = async ({ params: { serverId } }) => {
+const ServerIdPage: FC<ServerIdPageProps> = async props => {
+  const params = await props.params;
+
+  const {
+    serverId
+  } = params;
+
   const authUser = await getAuthUser();
 
   if (!authUser) return redirect("/login");

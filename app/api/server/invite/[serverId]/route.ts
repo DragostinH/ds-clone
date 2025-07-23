@@ -9,7 +9,8 @@ interface InviteParams {
   serverId: string;
 }
 
-export async function POST(req: NextRequest, { params }: { params: InviteParams }) {
+export async function POST(req: NextRequest, props: { params: Promise<InviteParams> }) {
+  const params = await props.params;
   try {
     const server = await client?.server.findUnique({
       where: {

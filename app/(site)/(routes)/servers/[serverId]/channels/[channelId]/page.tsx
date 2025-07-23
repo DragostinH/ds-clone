@@ -9,13 +9,14 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
 
 interface ChannelIdPageProps {
-  params: {
+  params: Promise<{
     serverId: string;
     channelId: string;
-  };
+  }>;
 }
 
-const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
+const ChannelIdPage = async (props: ChannelIdPageProps) => {
+  const params = await props.params;
   const authUser = await getAuthUser();
 
   if (!authUser) return redirect("/login");

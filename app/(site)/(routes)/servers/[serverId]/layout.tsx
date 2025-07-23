@@ -6,7 +6,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
-const ServerIdLayout = async ({ children, params }: { children: ReactNode; params: { serverId: string } }) => {
+const ServerIdLayout = async (props: { children: ReactNode; params: Promise<{ serverId: string }> }) => {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const authUser = await getAuthUser();
   if (!authUser) return redirect("/login");
   const { serverId } = params;

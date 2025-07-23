@@ -7,7 +7,8 @@ interface InviteAcceptParams {
   inviteId: string;
 }
 
-export async function POST(req: NextRequest, { params }: { params: InviteAcceptParams }) {
+export async function POST(req: NextRequest, props: { params: Promise<InviteAcceptParams> }) {
+  const params = await props.params;
   const authUser = await getAuthUser();
   console.log("[PARAMS FOR THIS SHITTTTTTTTTTT", params);
 

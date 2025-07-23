@@ -3,7 +3,8 @@ import client from "@/app/libs/prismadb";
 import { Conversation } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, { params }: { params: { conversationId: string } }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ conversationId: string }> }) {
+  const params = await props.params;
   try {
     const authUser = await getAuthUser();
     if (!authUser) {

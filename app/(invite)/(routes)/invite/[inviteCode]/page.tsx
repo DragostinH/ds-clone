@@ -13,7 +13,13 @@ interface InviteCodePageProps {
   };
 }
 
-const InviteCodePage: React.FC<InviteCodePageProps> = async ({ params: { inviteCode } }) => {
+const InviteCodePage: React.FC<InviteCodePageProps> = async props => {
+  const params = await props.params;
+
+  const {
+    inviteCode
+  } = params;
+
   const authUser = await getAuthUser();
 
   if (!authUser) return redirect("/login");

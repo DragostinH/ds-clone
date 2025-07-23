@@ -11,7 +11,13 @@ interface PrivateMessageProps {
   };
 }
 
-const PrivateMessage: FC<PrivateMessageProps> = async ({ params: { conversationId } }) => {
+const PrivateMessage: FC<PrivateMessageProps> = async props => {
+  const params = await props.params;
+
+  const {
+    conversationId
+  } = params;
+
   const authUser = await getAuthUser();
   const directChatMessagesApiUrl = `/api/conversation/${conversationId}/messages`;
   const chatInputApiUrl = "/api/socket/messages";

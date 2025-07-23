@@ -11,7 +11,8 @@ export async function GET(req: Request) {
   return NextResponse.json({ message: "Hello World id" });
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: ServerChannelId }) {
+export async function DELETE(req: NextRequest, props: { params: Promise<ServerChannelId> }) {
+  const params = await props.params;
   try {
     const authUser = await getAuthUser();
 
@@ -56,7 +57,8 @@ export async function DELETE(req: NextRequest, { params }: { params: ServerChann
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: ServerChannelId }) {
+export async function PATCH(req: NextRequest, props: { params: Promise<ServerChannelId> }) {
+  const params = await props.params;
   try {
     const { searchParams } = new URL(req.url);
 

@@ -1,13 +1,13 @@
 import getAuthUser from "@/actions/getAuthUser";
 import client from "@/app/libs/prismadb";
-import { NextApiRequest } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    const conversations = await prisma?.conversation.findMany();
+    const conversations = await client?.conversation.findMany();
     return NextResponse.json({ conversations });
   } catch (error) {
+    console.log("[ERROR_GET_CONVERSATIONS]", error);
     return NextResponse.error();
   }
 }
